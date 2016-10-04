@@ -1,0 +1,21 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Program Detail</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="program-detail">
+  <ion-list>
+
+	 <ion-item>
+	    <ion-label stacked>Name</ion-label>
+	    <ion-input [(ngModel)]="program.name" type="text"></ion-input>
+	  </ion-item>
+
+	 <ion-item>
+	   <ion-label stacked>Description</ion-label>
+	   <ion-textarea [(ngModel)]="program.description"></ion-textarea>
+	 </ion-item>
+
+	</ion-list>
+</ion-content>
