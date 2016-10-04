@@ -9,16 +9,16 @@
     </ion-item>
     <ion-item-options side="right">
       <button ion-button icon-left color="primary" (click)="programDetail(program)">
-        <ion-icon name="text"></ion-icon>
+        <ion-icon name="eye"></ion-icon>
         Detail
       </button>
-      <button ion-button icon-left color="secondary">
-        <ion-icon name="call"></ion-icon>
-        Call
+      <button ion-button icon-left color="secondary" (click)="programEdit(program)">
+        <ion-icon name="create"></ion-icon>
+        Edit
       </button>
       <button ion-button icon-left color="primary">
-        <ion-icon name="mail"></ion-icon>
-        Email
+        <ion-icon name="close"></ion-icon>
+        Delete
       </button>
     </ion-item-options>
   </ion-item-sliding>

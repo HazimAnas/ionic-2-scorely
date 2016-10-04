@@ -2,7 +2,8 @@ import {Component} from '@angular/core';
 import { OnInit } from '@angular/core';
 import {NavController} from 'ionic-angular';
 
-import {ProgramDetail} from './program-detail'
+import {ProgramDetail} from './program-detail';
+import {ProgramEdit} from './program-edit';
 import { Program } from './program';
 import { ProgramService } from '../../providers/program-service/program-service';
 
@@ -27,6 +28,12 @@ export class ProgramList implements OnInit {
 
   programDetail(program) {
    	this.navCtrl.push(ProgramDetail, {
+            program: program
+          });
+	}
+  
+  programEdit(program) {
+   	this.navCtrl.push(ProgramEdit, {
             program: program
           });
 	}

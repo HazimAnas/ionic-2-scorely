@@ -8,6 +8,7 @@ import { TabsPage } from '../pages/tabs/tabs';
 import { ProgramService } from '../providers/program-service/program-service';
 import {ProgramDetail } from '../components/program/program-detail';
 import {ProgramList } from '../components/program/program-list';
+import {ProgramEdit } from '../components/program/program-edit';
 
 @NgModule({
   declarations: [
@@ -17,7 +18,8 @@ import {ProgramList } from '../components/program/program-list';
     HomePage,
     TabsPage,
     ProgramDetail,
-    ProgramList
+    ProgramList,
+    ProgramEdit
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -30,7 +32,8 @@ import {ProgramList } from '../components/program/program-list';
     HomePage,
     TabsPage,
     ProgramDetail,
-    ProgramList
+    ProgramList,
+    ProgramEdit
   ],
   providers: [
   ProgramService
