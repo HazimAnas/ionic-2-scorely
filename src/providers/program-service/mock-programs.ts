@@ -1,14 +1,24 @@
 import { Program } from '../../components/program/program';
 
 export const PROGRAMS: Program[] = [
-  {id: 11, name: 'Mr. Nice', description: 'abc def ghi jkl mno pqr stu', team: ['team1', 'team2', 'team3']},
-  {id: 12, name: 'Narco', description: 'abc def ghi jkl mno pqr stu', team: ['team1', 'team2', 'team3']},
-  {id: 13, name: 'Bombasto', description: 'abc def ghi jkl mno pqr stu', team: ['team1', 'team2', 'team3']},
-  {id: 14, name: 'Celeritas', description: 'abc def ghi jkl mno pqr stu', team: ['team1', 'team2', 'team3']},
-  {id: 15, name: 'Magneta', description: 'abc def ghi jkl mno pqr stu', team: ['team1', 'team2', 'team3']},
-  {id: 16, name: 'RubberMan', description: 'abc def ghi jkl mno pqr stu', team: ['team1', 'team2', 'team3']},
-  {id: 17, name: 'Dynama', description: 'abc def ghi jkl mno pqr stu', team: ['team1', 'team2', 'team3']},
-  {id: 18, name: 'Dr IQ', description: 'abc def ghi jkl mno pqr stu', team: ['team1', 'team2', 'team3']},
-  {id: 19, name: 'Magma', description: 'abc def ghi jkl mno pqr stu', team: ['team1', 'team2', 'team3']},
-  {id: 20, name: 'Tornado', description: 'abc def ghi jkl mno pqr stu', team: ['team1', 'team2', 'team3']}
+  {id: 11, name: 'Program A', description: 'abc def ghi jkl mno pqr stu',
+   team: ['team1', 'team2', 'team3'], activity: ['Activity 1', 'Activity 2', 'Activity 3']},
+  {id: 12, name: 'Program Narco', description: 'abc def ghi jkl mno pqr stu',
+   team: ['team1', 'team2', 'team3'], activity: ['Activity 1', 'Activity 2', 'Activity 3']},
+  {id: 13, name: 'Program Bombasto', description: 'abc def ghi jkl mno pqr stu',
+   team: ['team1', 'team2', 'team3'], activity: ['Activity 1', 'Activity 2', 'Activity 3']},
+  {id: 14, name: 'Program Celeritas', description: 'abc def ghi jkl mno pqr stu',
+   team: ['team1', 'team2', 'team3'], activity: ['Activity 1', 'Activity 2', 'Activity 3']},
+  {id: 15, name: 'Program Magneta', description: 'abc def ghi jkl mno pqr stu',
+   team: ['team1', 'team2', 'team3'], activity: ['Activity 1', 'Activity 2', 'Activity 3']},
+  {id: 16, name: 'Program RubberMan', description: 'abc def ghi jkl mno pqr stu',
+   team: ['team1', 'team2', 'team3'], activity: ['Activity 1', 'Activity 2', 'Activity 3']},
+  {id: 17, name: 'Program Dynama', description: 'abc def ghi jkl mno pqr stu',
+   team: ['team1', 'team2', 'team3'], activity: ['Activity 1', 'Activity 2', 'Activity 3']},
+  {id: 18, name: 'Program Dr IQ', description: 'abc def ghi jkl mno pqr stu',
+   team: ['team1', 'team2', 'team3'], activity: ['Activity 1', 'Activity 2', 'Activity 3']},
+  {id: 19, name: 'Program Magma', description: 'abc def ghi jkl mno pqr stu',
+   team: ['team1', 'team2', 'team3'], activity: ['Activity 1', 'Activity 2', 'Activity 3']},
+  {id: 20, name: 'Program Tornado', description: 'abc def ghi jkl mno pqr stu',
+   team: ['team1', 'team2', 'team3'], activity: ['Activity 1', 'Activity 2', 'Activity 3']}
 ];

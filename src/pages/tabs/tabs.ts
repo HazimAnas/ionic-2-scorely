@@ -9,15 +9,11 @@ import {AccountPage} from '../account/account';
 })
 export class TabsPage {
 
-  private tab1Root: any;
-  private tab2Root: any;
-  private tab3Root: any;
+  tab1Root: any = HomePage;
+  tab2Root: any = StatisticPage;
+  tab3Root: any = AccountPage;
 
   constructor() {
-    // this tells the tabs component which Pages
-    // should be each tab's root Page
-    this.tab1Root = HomePage;
-    this.tab2Root = StatisticPage;
-    this.tab3Root = AccountPage;
+
   }
 }
