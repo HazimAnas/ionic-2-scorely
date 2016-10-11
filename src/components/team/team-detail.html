@@ -1,0 +1,42 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Team Detail</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-item>
+	     <h4>{{team.name}}</h4>
+	   </ion-item>
+
+	  <ion-item>
+	     <h4>{{team.description}}</h4>
+	  </ion-item>
+
+	</ion-list>
+  <ion-list>
+    <ion-list-header>
+      Team Point
+    </ion-list-header>
+    <ion-item-sliding *ngFor='let activity of team.activity'>
+      <ion-item>
+        <h2>{{team}}</h2>
+      </ion-item>
+      <ion-item-options side="right">
+        <button ion-button icon-left color="primary">
+          <ion-icon name="eye"></ion-icon>
+          Detail
+        </button>
+        <button ion-button icon-left color="secondary">
+          <ion-icon name="create"></ion-icon>
+          Edit
+        </button>
+        <button ion-button icon-left color="danger">
+          <ion-icon name="close"></ion-icon>
+          Delete
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+</ion-content>
