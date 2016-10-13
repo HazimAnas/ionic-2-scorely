@@ -19,12 +19,12 @@
     <ion-list-header>
       Team List
     </ion-list-header>
-    <ion-item-sliding *ngFor='let team of program.team'>
+    <ion-item-sliding *ngFor='let team of teams'>
       <ion-item>
-        <h2>{{team}}</h2>
+        <h2>{{team.name}}</h2>
       </ion-item>
       <ion-item-options side="right">
-        <button ion-button icon-left color="primary">
+        <button ion-button icon-left color="primary" (click)="teamDetail(team)">
           <ion-icon name="eye"></ion-icon>
           Detail
         </button>

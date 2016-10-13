@@ -6,9 +6,11 @@ import { StatisticPage } from '../pages/statistic/statistic';
 import { HomePage } from '../pages/home/home';
 import { TabsPage } from '../pages/tabs/tabs';
 import { ProgramService } from '../providers/program-service/program-service';
-import {ProgramDetail } from '../components/program/program-detail';
-import {ProgramList } from '../components/program/program-list';
-import {ProgramEdit } from '../components/program/program-edit';
+import { ProgramDetail } from '../components/program/program-detail';
+import { ProgramList } from '../components/program/program-list';
+import { ProgramEdit } from '../components/program/program-edit';
+import { TeamDetail } from '../components/team/team-detail';
+import { TeamService } from '../providers/team-service/team-service';
 
 @NgModule({
   declarations: [
@@ -19,7 +21,8 @@ import {ProgramEdit } from '../components/program/program-edit';
     TabsPage,
     ProgramDetail,
     ProgramList,
-    ProgramEdit
+    ProgramEdit,
+    TeamDetail
   ],
   imports: [
     IonicModule.forRoot(MyApp)
@@ -33,10 +36,12 @@ import {ProgramEdit } from '../components/program/program-edit';
     TabsPage,
     ProgramDetail,
     ProgramList,
-    ProgramEdit
+    ProgramEdit,
+    TeamDetail
   ],
   providers: [
-  ProgramService
+  ProgramService,
+  TeamService
   ]
 })
 export class AppModule {}

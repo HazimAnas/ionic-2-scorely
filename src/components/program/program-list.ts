@@ -31,7 +31,7 @@ export class ProgramList implements OnInit {
             program: program
           });
 	}
-  
+
   programEdit(program) {
    	this.navCtrl.push(ProgramEdit, {
             program: program

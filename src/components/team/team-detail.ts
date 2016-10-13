@@ -11,6 +11,6 @@ export class TeamDetail {
   team: Team;
 
   constructor(private navCtrl: NavController, param: NavParams) {
-  	//this.program = param.get('program');
+  	this.team = param.get('team');
   }
 }
