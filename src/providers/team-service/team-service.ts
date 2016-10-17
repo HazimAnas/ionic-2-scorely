@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
-import { Program } from '../../components/team/team';
+import { Team } from '../../components/team/team';
 import { TEAMS } from './mock-teams';
 /*
   Generated class for the TeamService provider.

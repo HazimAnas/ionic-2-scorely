@@ -4,4 +4,5 @@ export class Program {
 	description: string;
 	team: string[];
 	activity: string[];
+	//shared_with: string[];
 }
