@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import { OnInit } from '@angular/core';
 import {NavController} from 'ionic-angular';
-
+import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
 import {ProgramDetail} from './program-detail';
 import {ProgramEdit} from './program-edit';
 import { Program } from './program';
@@ -13,7 +13,7 @@ import { ProgramService } from '../../providers/program-service/program-service'
 })
 export class ProgramList implements OnInit {
 
-  programs : Program[];
+  programs : FirebaseObjectObservable<Program[]>;
   constructor(private navCtrl: NavController, private programService: ProgramService) {
   }
 
@@ -21,9 +21,9 @@ export class ProgramList implements OnInit {
     this.getPrograms();
   }
 
-
   getPrograms(): void {
-  	this.programService.getPrograms().then(programs => this.programs = programs);
+  	this.programService.getPrograms();
+    this.programs = this.programService.programs;
   }
 
   programDetail(program) {

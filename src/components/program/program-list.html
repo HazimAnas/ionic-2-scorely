@@ -2,7 +2,7 @@
   <ion-list-header>
     Program List
   </ion-list-header>
-  <ion-item-sliding *ngFor='let program of programs'>
+  <ion-item-sliding *ngFor='let program of programs | async'>
     <ion-item>
       <h2>{{program.name}}</h2>
       <h3>{{program.description}}</h3>

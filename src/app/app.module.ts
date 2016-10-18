@@ -11,6 +11,15 @@ import { ProgramList } from '../components/program/program-list';
 import { ProgramEdit } from '../components/program/program-edit';
 import { TeamDetail } from '../components/team/team-detail';
 import { TeamService } from '../providers/team-service/team-service';
+import { AngularFireModule } from 'angularfire2';
+
+const fbConf = {
+apiKey: "AIzaSyCgus8xLyN6gz-Nzr0y81_1XXWP02Vf_sE",
+authDomain: "scorely-9029a.firebaseapp.com",
+databaseURL: "https://scorely-9029a.firebaseio.com",
+storageBucket: "scorely-9029a.appspot.com",
+messagingSenderId: "66757883024"
+};
 
 @NgModule({
   declarations: [
@@ -25,7 +34,8 @@ import { TeamService } from '../providers/team-service/team-service';
     TeamDetail
   ],
   imports: [
-    IonicModule.forRoot(MyApp)
+    IonicModule.forRoot(MyApp),
+    AngularFireModule.initializeApp(fbConf)
   ],
   bootstrap: [IonicApp],
   entryComponents: [

@@ -1,8 +1,11 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
+import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { Program } from '../../components/program/program';
 import { PROGRAMS } from './mock-programs';
+import firebase from 'firebase';
+import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
 /*
   Generated class for the ProgramService provider.
 
@@ -11,10 +14,15 @@ import { PROGRAMS } from './mock-programs';
 */
 @Injectable()
 export class ProgramService {
+  public db: any;
+  public programs: FirebaseObjectObservable<Program[]>;
 
-  constructor(private http: Http) {}
+  constructor(private http: Http, public af: AngularFire) {
+    //this.db = firebase.database().ref('/program/');
+  }
 
-  getPrograms(): Promise<Program[]> {
-  	return Promise.resolve(PROGRAMS);
+  getPrograms() {
+    this.programs = this.af.database.object('/program');
+    console.log("service " + this.programs);
   }
 }
