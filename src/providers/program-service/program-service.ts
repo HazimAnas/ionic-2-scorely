@@ -1,11 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
-import {Observable} from 'rxjs/Observable';
 import 'rxjs/add/operator/map';
 import { Program } from '../../components/program/program';
-import { PROGRAMS } from './mock-programs';
-import firebase from 'firebase';
-import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
+//import { PROGRAMS } from './mock-programs';
+import { AngularFire, FirebaseObjectObservable, FirebaseListObservable } from 'angularfire2';
 /*
   Generated class for the ProgramService provider.
 
@@ -14,15 +12,44 @@ import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'a
 */
 @Injectable()
 export class ProgramService {
-  public db: any;
   public programs: FirebaseObjectObservable<Program[]>;
+  public programsList :FirebaseListObservable <Program[]>;
+  public newProgram : Program;
 
-  constructor(private http: Http, public af: AngularFire) {
-    //this.db = firebase.database().ref('/program/');
+  constructor(private http: Http, private af: AngularFire) {
+    this.programs = af.database.object('/program');
   }
 
   getPrograms() {
-    this.programs = this.af.database.object('/program');
-    console.log("service " + this.programs);
+    this.programsList = this.af.database.list('/program');
+  }
+
+  addProgram(program){
+    this.programsList.push({
+      name: program.name,
+      description: program.description,
+    }).then( newProgram => {
+      this.newProgram = newProgram;
+    }
+      , error => {
+        console.log(error);
+        this.newProgram = null;
+      });
+  }
+
+  editProgram(key : string, program: Program) {
+    this.programsList.update(key, {
+      name: program.name,
+      description: program.description
+    }).then( newProgram => {
+      console.log(newProgram);
+    }
+      , error => {
+        console.log(error);
+      });;
+  }
+
+  deleteProgram(key) {
+    this.programsList.remove(key);
   }
 }

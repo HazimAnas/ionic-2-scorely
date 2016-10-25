@@ -1,9 +1,10 @@
 import {Component} from '@angular/core';
 import { OnInit } from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {NavController, AlertController} from 'ionic-angular';
 import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
 import {ProgramDetail} from './program-detail';
 import {ProgramEdit} from './program-edit';
+import {ProgramAdd} from './program-add';
 import { Program } from './program';
 import { ProgramService } from '../../providers/program-service/program-service';
 
@@ -13,8 +14,8 @@ import { ProgramService } from '../../providers/program-service/program-service'
 })
 export class ProgramList implements OnInit {
 
-  programs : FirebaseObjectObservable<Program[]>;
-  constructor(private navCtrl: NavController, private programService: ProgramService) {
+  programs : FirebaseListObservable<Program[]>;
+  constructor(private navCtrl: NavController, public alertCtrl: AlertController, private programService: ProgramService) {
   }
 
   ngOnInit(): void {
@@ -23,7 +24,7 @@ export class ProgramList implements OnInit {
 
   getPrograms(): void {
   	this.programService.getPrograms();
-    this.programs = this.programService.programs;
+    this.programs = this.programService.programsList;
   }
 
   programDetail(program) {
@@ -32,9 +33,35 @@ export class ProgramList implements OnInit {
           });
 	}
 
+  programAdd() {
+    this.navCtrl.push(ProgramAdd);
+  }
+
   programEdit(program) {
    	this.navCtrl.push(ProgramEdit, {
             program: program
           });
 	}
+
+  programDelete(key) {
+    let confirm = this.alertCtrl.create({
+      title: 'Celete Confirmation',
+      message: 'This action is irreversible.Delete this program?',
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: () => {
+            console.log('Disagree clicked');
+          }
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            this.programService.deleteProgram(key);
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
 }

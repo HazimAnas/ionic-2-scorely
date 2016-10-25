@@ -6,15 +6,16 @@
 
 <ion-content padding class="program-edit">
   <ion-list>
-    <form #form="ngForm" (ngSubmit)="logForm(form)" novalidate>
+    <form (ngSubmit)="submitEditForm(program.$key, program)">
   	 <ion-item>
   	    <ion-label stacked>Name</ion-label>
-  	    <ion-input [(ngModel)]="program.name" type="text" ngControl="name"name="name"></ion-input>
+  	    <ion-input [(ngModel)]="program.name" type="text" ngControl="name"name="name" required></ion-input>
   	  </ion-item>
 
   	 <ion-item>
   	   <ion-label stacked>Description</ion-label>
   	   <ion-textarea [(ngModel)]="program.description" ngControl="description" name="description"></ion-textarea>
+       <ion-label stacked>{{program.$key}}</ion-label>
   	 </ion-item>
      <ion-item>
        <button ion-button block large type="submit">Edit</button>
