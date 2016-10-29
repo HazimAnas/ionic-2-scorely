@@ -4,6 +4,7 @@ import 'rxjs/add/operator/map';
 import { Program } from '../../components/program/program';
 //import { PROGRAMS } from './mock-programs';
 import { AngularFire, FirebaseObjectObservable, FirebaseListObservable } from 'angularfire2';
+import { AuthService } from '../auth-service/auth-service';
 /*
   Generated class for the ProgramService provider.
 
@@ -15,13 +16,15 @@ export class ProgramService {
   public programs: FirebaseObjectObservable<Program[]>;
   public programsList :FirebaseListObservable <Program[]>;
   public newProgram : Program;
+  private userID;
 
-  constructor(private http: Http, private af: AngularFire) {
-    this.programs = af.database.object('/program');
+  constructor(private http: Http, private af: AngularFire,public as : AuthService) {
+    this.programs = af.database.object('/program/'+this.userID);
+    this.userID = as.getUser().uid;
   }
 
   getPrograms() {
-    this.programsList = this.af.database.list('/program');
+    this.programsList = this.af.database.list('/program/'+this.userID);
   }
 
   addProgram(program){

@@ -11,7 +11,9 @@ import { ProgramDetail } from '../components/program/program-detail';
 import { ProgramList } from '../components/program/program-list';
 import { ProgramAdd } from '../components/program/program-add';
 import { ProgramEdit } from '../components/program/program-edit';
+import { ActivityAdd } from '../components/activity/activity-add';
 import { TeamDetail } from '../components/team/team-detail';
+import { ActivityService } from '../providers/activity-service/activity-service';
 import { TeamService } from '../providers/team-service/team-service';
 import { AuthService } from '../providers/auth-service/auth-service';
 import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
@@ -41,6 +43,7 @@ const fbAuthConf = {
     ProgramList,
     ProgramEdit,
     ProgramAdd,
+    ActivityAdd,
     TeamDetail
   ],
   imports: [
@@ -59,10 +62,12 @@ const fbAuthConf = {
     ProgramList,
     ProgramEdit,
     ProgramAdd,
+    ActivityAdd,
     TeamDetail
   ],
   providers: [
   ProgramService,
+  ActivityService,
   TeamService,
   AuthService
   ]

@@ -17,6 +17,9 @@
 	</ion-list>
   <ion-list>
     <ion-list-header>
+      <button item-right clear light>
+        <ion-icon name="add"></ion-icon>
+      </button>
       Team List
     </ion-list-header>
     <ion-item-sliding *ngFor='let team of program.teams'>
@@ -41,11 +44,14 @@
   </ion-list>
   <ion-list>
     <ion-list-header>
+      <button item-right clear light (click)="activityAdd()">
+        <ion-icon name="add"></ion-icon>
+      </button>
       Activity List
     </ion-list-header>
-    <ion-item-sliding *ngFor='let activity of program.activity'>
+    <ion-item-sliding *ngFor='let activity of activities| async'>
       <ion-item>
-        <h2>{{activity}}</h2>
+        <h2>{{activity.name}}</h2>
       </ion-item>
       <ion-item-options side="right">
         <button ion-button icon-left color="primary">

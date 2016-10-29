@@ -27,8 +27,9 @@ export class ProgramList implements OnInit {
     this.programs = this.programService.programsList;
   }
 
-  programDetail(program) {
+  programDetail(key, program) {
    	this.navCtrl.push(ProgramDetail, {
+            programId: key,
             program: program
           });
 	}
@@ -45,7 +46,7 @@ export class ProgramList implements OnInit {
 
   programDelete(key) {
     let confirm = this.alertCtrl.create({
-      title: 'Celete Confirmation',
+      title: 'Delete Confirmation',
       message: 'This action is irreversible.Delete this program?',
       buttons: [
         {
