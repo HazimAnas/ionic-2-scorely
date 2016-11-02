@@ -1,12 +1,15 @@
 import {Component} from '@angular/core';
-import {NavController,NavParams} from 'ionic-angular';
+import {NavController, NavParams, AlertController} from 'ionic-angular';
 import { Program } from './program';
 import { Activity } from '../activity/activity';
 import { Team } from '../team/team';
 import { TeamService } from '../../providers/team-service/team-service';
 import { ActivityService } from '../../providers/activity-service/activity-service';
+import { TeamAdd } from '../team/team-add';
 import { TeamDetail } from '../team/team-detail';
 import { ActivityAdd } from '../activity/activity-add';
+import { ActivityEdit } from '../activity/activity-edit';
+import { ActivityDetail } from '../activity/activity-detail';
 import { AngularFire, FirebaseListObservable } from 'angularfire2';
 
 @Component({
@@ -18,9 +21,9 @@ export class ProgramDetail {
   public program: Program;
   public programId: string;
   public activities: FirebaseListObservable <Activity[]>;
-  public teams: Team[];
+  public teams: FirebaseListObservable <Team[]>;
 
-  constructor(private navCtrl: NavController, param: NavParams, private teamService: TeamService, private activityService: ActivityService) {
+  constructor(private navCtrl: NavController, private param: NavParams, public alertCtrl: AlertController, private teamService: TeamService, private activityService: ActivityService) {
   	this.program = param.get('program');
     this.programId = param.get('programId');
     this.getTeams();
@@ -28,22 +31,61 @@ export class ProgramDetail {
   }
 
   getActivites(): void {
-      this.activityService.getActivities(this.programId);
-      this.activities = this.activityService.activityList;
+    this.activityService.getActivities(this.programId);
+    this.activities = this.activityService.activityList;
   }
 
   getTeams(): void {
-    this.teamService.getTeams().then(teams => this.teams = teams);
+    this.teamService.getTeams(this.programId);
+    this.teams = this.teamService.teamList;
+  }
+
+  teamAdd() {
+    this.navCtrl.push(TeamAdd);
   }
 
   teamDetail(team) {
     this.navCtrl.push(TeamDetail, {
-            team: team
+            teamId: team
           });
   }
 
   activityAdd() {
     this.navCtrl.push(ActivityAdd);
+  }
+
+  activityDetail(activity) {
+    this.navCtrl.push(ActivityDetail, {
+            activityId: activity
+          });
+  }
+
+  activityEdit(activity) {
+    this.navCtrl.push(ActivityEdit, {
+            activity: activity
+          });
+  }
+
+  activityDelete(key) {
+    let confirm = this.alertCtrl.create({
+      title: 'Delete Confirmation',
+      message: 'This action is irreversible.Delete this program?',
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: () => {
+            console.log('Disagree clicked');
+          }
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            this.activityService.deleteActivity(key);
+          }
+        }
+      ]
+    });
+    confirm.present();
   }
 
 }

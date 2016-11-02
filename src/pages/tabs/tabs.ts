@@ -44,12 +44,12 @@ export class TabsPage {
         console.log("Fail "+ user);
         this.navCtrl.push(LoginPage);
       }
-    });*/
+    });
     if(this.as.checkAuth()) {
-      console.log(this.as.getUser());
+      console.log("tab "+this.as.getUser());
     }
     else {
       this.navCtrl.push(LoginPage);
-    }
+    }*/
   }
 }

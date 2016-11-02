@@ -19,9 +19,9 @@
     <ion-list-header>
       Team Point
     </ion-list-header>
-    <ion-item-sliding *ngFor='let activity of team.activity'>
+    <ion-item-sliding *ngFor='let team of activity.team'>
       <ion-item>
-        <h2>{{activity}}</h2>
+        <h2>{{team.name}}</h2>
       </ion-item>
       <ion-item-options side="right">
         <button ion-button icon-left color="primary">

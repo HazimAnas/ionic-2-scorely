@@ -35,7 +35,7 @@ export class LoginPage {
       if(user) {
         // user logged in
         console.log("Success "+ user);
-        console.log(user);
+        console.log("login "+user);
         this.as.setUser(user);
         this.navCtrl.push(TabsPage);
       }

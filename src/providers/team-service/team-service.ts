@@ -2,7 +2,9 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Team } from '../../components/team/team';
-import { TEAMS } from './mock-teams';
+import { AngularFire, FirebaseObjectObservable, FirebaseListObservable } from 'angularfire2';
+import { AuthService } from '../auth-service/auth-service';
+import { ActivityService } from '../activity-service/activity-service';
 /*
   Generated class for the TeamService provider.
 
@@ -12,9 +14,57 @@ import { TEAMS } from './mock-teams';
 @Injectable()
 export class TeamService {
 
-  constructor(private http: Http) {}
+  public teamList : FirebaseListObservable <Team[]>;
+  public newTeam : Team;
+  public activeProgram : string;
 
-  getTeams(): Promise<Team[]> {
-  	return Promise.resolve(TEAMS);
+  constructor(private http: Http, private af: AngularFire) {}
+
+  getTeams(programId) {
+    this.activeProgram = programId;
+    this.teamList = this.af.database.list('/team/'+programId);
+  }
+
+  getTeamsById(teamId) {
+    console.log('/team/'+this.activeProgram+'/'+teamId);
+    return this.af.database.object('/team/'+this.activeProgram+'/'+teamId);
+  }
+  addTeam(team){
+    var teamActivityList = {};
+    var activity = this.af.database.list('/activity/'+this.activeProgram);
+
+    activity.subscribe(activities=>{
+     activities.forEach(activity => {
+       teamActivityList[activity.$key] = {"name" : activity.name};
+     });
+    });
+    JSON.stringify(teamActivityList)
+
+    this.teamList.push({
+      name: team.name,
+      description: team.description,
+      activity: teamActivityList
+    }).then( newTeam => {
+      this.newTeam = newTeam;
+    }
+      , error => {
+        console.log(error);
+        this.newTeam = null;
+      });
+  }
+
+  editTeam(key : string, team: Team) {
+    this.teamList.update(key, {
+      name: team.name,
+    }).then( newTeam => {
+      console.log(newTeam);
+    }
+      , error => {
+        console.log(error);
+      });;
+  }
+
+  deleteTeam(key) {
+    this.teamList.remove(key);
   }
 }

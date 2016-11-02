@@ -1,8 +1,5 @@
 export class Team {
-	id: number;
+	$key: string;
 	name: string;
-	description: string;
-	point: number[];
-	program_id: string;
 	activity: string[];
 }

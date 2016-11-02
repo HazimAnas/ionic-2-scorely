@@ -84146,13 +84146,13 @@ var TabsPage = (function () {
             console.log("Fail "+ user);
             this.navCtrl.push(LoginPage);
           }
-        });*/
-        if (this.as.checkAuth()) {
-            console.log(this.as.getUser());
+        });
+        if(this.as.checkAuth()) {
+          console.log("tab "+this.as.getUser());
         }
         else {
-            this.navCtrl.push(LoginPage);
-        }
+          this.navCtrl.push(LoginPage);
+        }*/
     };
     TabsPage = __decorate$111([
         Component({
@@ -84199,7 +84199,7 @@ var LoginPage = (function () {
             if (user) {
                 // user logged in
                 console.log("Success " + user);
-                console.log(user);
+                console.log("login " + user);
                 _this.as.setUser(user);
                 _this.navCtrl.push(TabsPage);
             }
@@ -84309,29 +84309,6 @@ var ProgramService = (function () {
     return ProgramService;
 }());
 
-var TEAMS = [
-    { id: 11, name: 'Team A', description: 'abc def ghi jkl mno pqr stu',
-        point: [3, 4, 5], program_id: "1", activity: ['Activity 1', 'Activity 2', 'Activity 3'] },
-    { id: 12, name: 'Team Narco', description: 'abc def ghi jkl mno pqr stu',
-        point: [3, 4, 5], program_id: "1", activity: ['Activity 1', 'Activity 2', 'Activity 3'] },
-    { id: 13, name: 'Team Bombasto', description: 'abc def ghi jkl mno pqr stu',
-        point: [3, 4, 5], program_id: "1", activity: ['Activity 1', 'Activity 2', 'Activity 3'] },
-    { id: 14, name: 'Team Celeritas', description: 'abc def ghi jkl mno pqr stu',
-        point: [3, 4, 5], program_id: "1", activity: ['Activity 1', 'Activity 2', 'Activity 3'] },
-    { id: 15, name: 'Team Magneta', description: 'abc def ghi jkl mno pqr stu',
-        point: [3, 4, 5], program_id: "1", activity: ['Activity 1', 'Activity 2', 'Activity 3'] },
-    { id: 16, name: 'Team RubberMan', description: 'abc def ghi jkl mno pqr stu',
-        point: [3, 4, 5], program_id: "1", activity: ['Activity 1', 'Activity 2', 'Activity 3'] },
-    { id: 17, name: 'Team Dynama', description: 'abc def ghi jkl mno pqr stu',
-        point: [3, 4, 5], program_id: "1", activity: ['Activity 1', 'Activity 2', 'Activity 3'] },
-    { id: 18, name: 'Team Dr IQ', description: 'abc def ghi jkl mno pqr stu',
-        point: [3, 4, 5], program_id: "1", activity: ['Activity 1', 'Activity 2', 'Activity 3'] },
-    { id: 19, name: 'Team Magma', description: 'abc def ghi jkl mno pqr stu',
-        point: [3, 4, 5], program_id: "1", activity: ['Activity 1', 'Activity 2', 'Activity 3'] },
-    { id: 20, name: 'Team Tornado', description: 'abc def ghi jkl mno pqr stu',
-        point: [3, 4, 5], program_id: "1", activity: ['Activity 1', 'Activity 2', 'Activity 3'] }
-];
-
 var __decorate$117 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -84348,15 +84325,55 @@ var __metadata$10 = (undefined && undefined.__metadata) || function (k, v) {
   for more info on providers and Angular 2 DI.
 */
 var TeamService = (function () {
-    function TeamService(http) {
+    function TeamService(http, af) {
         this.http = http;
+        this.af = af;
     }
-    TeamService.prototype.getTeams = function () {
-        return Promise.resolve(TEAMS);
+    TeamService.prototype.getTeams = function (programId) {
+        this.activeProgram = programId;
+        this.teamList = this.af.database.list('/team/' + programId);
+    };
+    TeamService.prototype.getTeamsById = function (teamId) {
+        console.log('/team/' + this.activeProgram + '/' + teamId);
+        return this.af.database.object('/team/' + this.activeProgram + '/' + teamId);
+    };
+    TeamService.prototype.addTeam = function (team) {
+        var _this = this;
+        var teamActivityList = {};
+        var activity = this.af.database.list('/activity/' + this.activeProgram);
+        activity.subscribe(function (activities) {
+            activities.forEach(function (activity) {
+                teamActivityList[activity.$key] = { "name": activity.name };
+            });
+        });
+        JSON.stringify(teamActivityList);
+        this.teamList.push({
+            name: team.name,
+            description: team.description,
+            activity: teamActivityList
+        }).then(function (newTeam) {
+            _this.newTeam = newTeam;
+        }, function (error) {
+            console.log(error);
+            _this.newTeam = null;
+        });
+    };
+    TeamService.prototype.editTeam = function (key, team) {
+        this.teamList.update(key, {
+            name: team.name,
+        }).then(function (newTeam) {
+            console.log(newTeam);
+        }, function (error) {
+            console.log(error);
+        });
+        
+    };
+    TeamService.prototype.deleteTeam = function (key) {
+        this.teamList.remove(key);
     };
     TeamService = __decorate$117([
         Injectable(), 
-        __metadata$10('design:paramtypes', [Http])
+        __metadata$10('design:paramtypes', [Http, AngularFire])
     ], TeamService);
     return TeamService;
 }());
@@ -84382,13 +84399,27 @@ var ActivityService = (function () {
         this.af = af;
     }
     ActivityService.prototype.getActivities = function (programId) {
+        this.activeProgram = programId;
         this.activityList = this.af.database.list('/activity/' + programId);
+    };
+    ActivityService.prototype.getActivitiesById = function (activityId) {
+        console.log('/activity/' + this.activeProgram + '/' + activityId);
+        return this.af.database.object('/activity/' + this.activeProgram + '/' + activityId);
     };
     ActivityService.prototype.addActivity = function (activity) {
         var _this = this;
+        var activityTeamList = {};
+        var team = this.af.database.list('/team/' + this.activeProgram);
+        team.subscribe(function (teams) {
+            teams.forEach(function (team) {
+                activityTeamList[team.$key] = { "name": team.name };
+            });
+        });
+        JSON.stringify(activityTeamList);
         this.activityList.push({
             name: activity.name,
             description: activity.description,
+            team: activityTeamList
         }).then(function (newActivity) {
             _this.newActivity = newActivity;
         }, function (error) {
@@ -84417,6 +84448,12 @@ var ActivityService = (function () {
     return ActivityService;
 }());
 
+var Team = (function () {
+    function Team() {
+    }
+    return Team;
+}());
+
 var __decorate$119 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -84426,16 +84463,59 @@ var __decorate$119 = (undefined && undefined.__decorate) || function (decorators
 var __metadata$12 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-var TeamDetail = (function () {
-    function TeamDetail(navCtrl, param) {
+var TeamAdd = (function () {
+    function TeamAdd(navCtrl, teamService) {
         this.navCtrl = navCtrl;
-        this.team = param.get('team');
+        this.teamService = teamService;
+        this.newTeam = new Team;
     }
-    TeamDetail = __decorate$119([
+    TeamAdd.prototype.submitAddForm = function () {
+        this.teamService.addTeam(this.newTeam);
+    };
+    TeamAdd.prototype.logForm = function (form) {
+        console.log(form.value);
+    };
+    TeamAdd = __decorate$119([
         Component({
-            selector: 'team-detail',template:/*ion-inline-start:"C:\Development\Ionic\Scorely\src\components\team\team-detail.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>Team Detail</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <ion-list>\n\n    <ion-item>\n\n	     <h4>{{team.name}}</h4>\n\n	   </ion-item>\n\n\n\n	  <ion-item>\n\n	     <h4>{{team.description}}</h4>\n\n	  </ion-item>\n\n\n\n	</ion-list>\n\n  <ion-list>\n\n    <ion-list-header>\n\n      Team Point\n\n    </ion-list-header>\n\n    <ion-item-sliding *ngFor=\'let activity of team.activity\'>\n\n      <ion-item>\n\n        <h2>{{activity}}</h2>\n\n      </ion-item>\n\n      <ion-item-options side="right">\n\n        <button ion-button icon-left color="primary">\n\n          <ion-icon name="eye"></ion-icon>\n\n          Detail\n\n        </button>\n\n        <button ion-button icon-left color="secondary">\n\n          <ion-icon name="create"></ion-icon>\n\n          Edit\n\n        </button>\n\n        <button ion-button icon-left color="danger">\n\n          <ion-icon name="close"></ion-icon>\n\n          Delete\n\n        </button>\n\n      </ion-item-options>\n\n    </ion-item-sliding>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"C:\Development\Ionic\Scorely\src\components\team\team-detail.html"*/
+            selector: 'team-add',template:/*ion-inline-start:"C:\Development\Ionic\Scorely\src\components\team\team-add.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>Team Add</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding class="team-add">\n\n  <ion-list>\n\n    <form (ngSubmit)="submitAddForm()">\n\n  	 <ion-item>\n\n  	    <ion-label stacked>Name</ion-label>\n\n  	    <ion-input [(ngModel)]="newTeam.name" type="text" ngControl="name"name="name" required></ion-input>\n\n  	  </ion-item>\n\n\n\n  	 <ion-item>\n\n  	   <ion-label stacked>Description</ion-label>\n\n  	   <ion-textarea [(ngModel)]="newTeam.description" ngControl="description" name="description"></ion-textarea>\n\n  	 </ion-item>\n\n     <ion-item>\n\n       <button ion-button block large type="submit">Add</button>\n\n    </ion-item>\n\n    <ion-item>\n\n     <button ion-button color="danger" block large navPop>Cancel</button>\n\n   </ion-item>\n\n    </form>\n\n	</ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"C:\Development\Ionic\Scorely\src\components\team\team-add.html"*/
         }), 
-        __metadata$12('design:paramtypes', [NavController, NavParams])
+        __metadata$12('design:paramtypes', [NavController, TeamService])
+    ], TeamAdd);
+    return TeamAdd;
+}());
+
+var __decorate$120 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$13 = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var TeamDetail = (function () {
+    function TeamDetail(navCtrl, param, teamservice) {
+        this.navCtrl = navCtrl;
+        this.param = param;
+        this.teamservice = teamservice;
+        this.team = new Team;
+        this.getTeam();
+    }
+    TeamDetail.prototype.getTeam = function () {
+        var _this = this;
+        this.teamObs = this.teamservice.getTeamsById(this.param.get('teamId'));
+        this.teamObs.subscribe(function (team) {
+            _this.team.name = team.name,
+                _this.team.activity = team.activity;
+        });
+        this.team.activity = Object.keys(this.team.activity).map(function (key) { return _this.team.activity[key]; });
+        console.log(this.team);
+    };
+    TeamDetail = __decorate$120([
+        Component({
+            selector: 'team-detail',template:/*ion-inline-start:"C:\Development\Ionic\Scorely\src\components\team\team-detail.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>Team Detail</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <ion-list>\n\n    <ion-item>\n\n	     <h4>{{team.name}}</h4>\n\n	   </ion-item>\n\n\n\n	  <ion-item>\n\n	     <h4>{{team.description}}</h4>\n\n	  </ion-item>\n\n\n\n	</ion-list>\n\n  <ion-list>\n\n    <ion-list-header>\n\n      Team Point\n\n    </ion-list-header>\n\n    <ion-item-sliding *ngFor=\'let activity of team.activity\'>\n\n      <ion-item>\n\n        <h2>{{activity.name}}</h2>\n\n      </ion-item>\n\n      <ion-item-options side="right">\n\n        <button ion-button icon-left color="primary">\n\n          <ion-icon name="eye"></ion-icon>\n\n          Detail\n\n        </button>\n\n        <button ion-button icon-left color="secondary">\n\n          <ion-icon name="create"></ion-icon>\n\n          Edit\n\n        </button>\n\n        <button ion-button icon-left color="danger">\n\n          <ion-icon name="close"></ion-icon>\n\n          Delete\n\n        </button>\n\n      </ion-item-options>\n\n    </ion-item-sliding>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"C:\Development\Ionic\Scorely\src\components\team\team-detail.html"*/
+        }), 
+        __metadata$13('design:paramtypes', [NavController, NavParams, TeamService])
     ], TeamDetail);
     return TeamDetail;
 }());
@@ -84446,13 +84526,13 @@ var Activity = (function () {
     return Activity;
 }());
 
-var __decorate$120 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$121 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$13 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$14 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var ActivityAdd = (function () {
@@ -84467,13 +84547,85 @@ var ActivityAdd = (function () {
     ActivityAdd.prototype.logForm = function (form) {
         console.log(form.value);
     };
-    ActivityAdd = __decorate$120([
+    ActivityAdd = __decorate$121([
         Component({
             selector: 'activity-add',template:/*ion-inline-start:"C:\Development\Ionic\Scorely\src\components\activity\activity-add.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>Activity Add</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding class="activity-add">\n\n  <ion-list>\n\n    <form (ngSubmit)="submitAddForm()">\n\n  	 <ion-item>\n\n  	    <ion-label stacked>Name</ion-label>\n\n  	    <ion-input [(ngModel)]="newActivity.name" type="text" ngControl="name"name="name" required></ion-input>\n\n  	  </ion-item>\n\n\n\n  	 <ion-item>\n\n  	   <ion-label stacked>Description</ion-label>\n\n  	   <ion-textarea [(ngModel)]="newActivity.description" ngControl="description" name="description"></ion-textarea>\n\n  	 </ion-item>\n\n     <ion-item>\n\n       <button ion-button block large type="submit">Add</button>\n\n    </ion-item>\n\n    <ion-item>\n\n     <button ion-button color="danger" block large navPop>Cancel</button>\n\n   </ion-item>\n\n    </form>\n\n	</ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"C:\Development\Ionic\Scorely\src\components\activity\activity-add.html"*/
         }), 
-        __metadata$13('design:paramtypes', [NavController, ActivityService])
+        __metadata$14('design:paramtypes', [NavController, ActivityService])
     ], ActivityAdd);
     return ActivityAdd;
+}());
+
+var __decorate$122 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$15 = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var ActivityEdit = (function () {
+    function ActivityEdit(navCtrl, param, activityService) {
+        this.navCtrl = navCtrl;
+        this.activityService = activityService;
+        this.activity = param.get('activity');
+        console.log(this.activity);
+    }
+    ActivityEdit.prototype.logForm = function (form) {
+        console.log(form.value);
+    };
+    ActivityEdit.prototype.submitEditForm = function (key, activity) {
+        this.activityService.editActivity(key, activity);
+    };
+    __decorate$122([
+        Input(), 
+        __metadata$15('design:type', Activity)
+    ], ActivityEdit.prototype, "activity", void 0);
+    ActivityEdit = __decorate$122([
+        Component({
+            selector: 'activity-edit',template:/*ion-inline-start:"C:\Development\Ionic\Scorely\src\components\activity\activity-edit.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>Activity Edit</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding class="activity-edit">\n\n  <ion-list>\n\n    <form (ngSubmit)="submitEditForm(activity.$key, activity)">\n\n  	 <ion-item>\n\n  	    <ion-label stacked>Name</ion-label>\n\n  	    <ion-input [(ngModel)]="activity.name" type="text" ngControl="name" name="name" required></ion-input>\n\n  	  </ion-item>\n\n\n\n  	 <ion-item>\n\n  	   <ion-label stacked>Description</ion-label>\n\n  	   <ion-textarea [(ngModel)]="activity.description" ngControl="description" name="description"></ion-textarea>\n\n  	 </ion-item>\n\n     <ion-item>\n\n       <button ion-button block large type="submit">Edit</button>\n\n    </ion-item>\n\n    <ion-item>\n\n     <button ion-button color="danger" block large navPop>Cancel</button>\n\n   </ion-item>\n\n    </form>\n\n	</ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"C:\Development\Ionic\Scorely\src\components\activity\activity-edit.html"*/
+        }), 
+        __metadata$15('design:paramtypes', [NavController, NavParams, ActivityService])
+    ], ActivityEdit);
+    return ActivityEdit;
+}());
+
+var __decorate$123 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata$16 = (undefined && undefined.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var ActivityDetail = (function () {
+    function ActivityDetail(navCtrl, param, activityService) {
+        this.navCtrl = navCtrl;
+        this.param = param;
+        this.activityService = activityService;
+        this.activity = new Activity;
+        this.getActivity();
+    }
+    ActivityDetail.prototype.getActivity = function () {
+        var _this = this;
+        this.activityObs = this.activityService.getActivitiesById(this.param.get('activityId'));
+        this.activityObs.subscribe(function (activity) {
+            _this.activity.name = activity.name,
+                _this.activity.description = activity.description,
+                _this.activity.team = activity.team;
+        });
+        this.activity.team = Object.keys(this.activity.team).map(function (key) { return _this.activity.team[key]; });
+        console.log(this.activity);
+    };
+    ActivityDetail = __decorate$123([
+        Component({
+            selector: 'activity-detail',template:/*ion-inline-start:"C:\Development\Ionic\Scorely\src\components\activity\activity-detail.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>Activity Detail</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding>\n\n  <ion-list>\n\n    <ion-item>\n\n	     <h4>{{activity.name}}</h4>\n\n	   </ion-item>\n\n\n\n	  <ion-item>\n\n	     <h4>{{activity.description}}</h4>\n\n	  </ion-item>\n\n\n\n	</ion-list>\n\n  <ion-list>\n\n    <ion-list-header>\n\n      Team Point\n\n    </ion-list-header>\n\n    <ion-item-sliding *ngFor=\'let team of activity.team\'>\n\n      <ion-item>\n\n        <h2>{{team.name}}</h2>\n\n      </ion-item>\n\n      <ion-item-options side="right">\n\n        <button ion-button icon-left color="primary">\n\n          <ion-icon name="eye"></ion-icon>\n\n          Detail\n\n        </button>\n\n        <button ion-button icon-left color="secondary">\n\n          <ion-icon name="create"></ion-icon>\n\n          Edit\n\n        </button>\n\n        <button ion-button icon-left color="danger">\n\n          <ion-icon name="close"></ion-icon>\n\n          Delete\n\n        </button>\n\n      </ion-item-options>\n\n    </ion-item-sliding>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"C:\Development\Ionic\Scorely\src\components\activity\activity-detail.html"*/
+        }), 
+        __metadata$16('design:paramtypes', [NavController, NavParams, ActivityService])
+    ], ActivityDetail);
+    return ActivityDetail;
 }());
 
 var __decorate$116 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
@@ -84486,8 +84638,10 @@ var __metadata$9 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var ProgramDetail = (function () {
-    function ProgramDetail(navCtrl, param, teamService, activityService) {
+    function ProgramDetail(navCtrl, param, alertCtrl, teamService, activityService) {
         this.navCtrl = navCtrl;
+        this.param = param;
+        this.alertCtrl = alertCtrl;
         this.teamService = teamService;
         this.activityService = activityService;
         this.program = param.get('program');
@@ -84500,22 +84654,57 @@ var ProgramDetail = (function () {
         this.activities = this.activityService.activityList;
     };
     ProgramDetail.prototype.getTeams = function () {
-        var _this = this;
-        this.teamService.getTeams().then(function (teams) { return _this.teams = teams; });
+        this.teamService.getTeams(this.programId);
+        this.teams = this.teamService.teamList;
+    };
+    ProgramDetail.prototype.teamAdd = function () {
+        this.navCtrl.push(TeamAdd);
     };
     ProgramDetail.prototype.teamDetail = function (team) {
         this.navCtrl.push(TeamDetail, {
-            team: team
+            teamId: team
         });
     };
     ProgramDetail.prototype.activityAdd = function () {
         this.navCtrl.push(ActivityAdd);
     };
+    ProgramDetail.prototype.activityDetail = function (activity) {
+        this.navCtrl.push(ActivityDetail, {
+            activityId: activity
+        });
+    };
+    ProgramDetail.prototype.activityEdit = function (activity) {
+        this.navCtrl.push(ActivityEdit, {
+            activity: activity
+        });
+    };
+    ProgramDetail.prototype.activityDelete = function (key) {
+        var _this = this;
+        var confirm = this.alertCtrl.create({
+            title: 'Delete Confirmation',
+            message: 'This action is irreversible.Delete this program?',
+            buttons: [
+                {
+                    text: 'Cancel',
+                    handler: function () {
+                        console.log('Disagree clicked');
+                    }
+                },
+                {
+                    text: 'Delete',
+                    handler: function () {
+                        _this.activityService.deleteActivity(key);
+                    }
+                }
+            ]
+        });
+        confirm.present();
+    };
     ProgramDetail = __decorate$116([
         Component({
-            selector: 'program-detail',template:/*ion-inline-start:"C:\Development\Ionic\Scorely\src\components\program\program-detail.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>Program Detail</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding class="program-detail">\n\n  <ion-list>\n\n    <ion-item>\n\n	     <h4>{{program.name}}</h4>\n\n	   </ion-item>\n\n\n\n	  <ion-item>\n\n	     <h4>{{program.description}}</h4>\n\n	  </ion-item>\n\n\n\n	</ion-list>\n\n  <ion-list>\n\n    <ion-list-header>\n\n      <button item-right clear light>\n\n        <ion-icon name="add"></ion-icon>\n\n      </button>\n\n      Team List\n\n    </ion-list-header>\n\n    <ion-item-sliding *ngFor=\'let team of program.teams\'>\n\n      <ion-item>\n\n        <h2>{{team.name}}</h2>\n\n      </ion-item>\n\n      <ion-item-options side="right">\n\n        <button ion-button icon-left color="primary" (click)="teamDetail(team)">\n\n          <ion-icon name="eye"></ion-icon>\n\n          Detail\n\n        </button>\n\n        <button ion-button icon-left color="secondary">\n\n          <ion-icon name="create"></ion-icon>\n\n          Edit\n\n        </button>\n\n        <button ion-button icon-left color="danger">\n\n          <ion-icon name="close"></ion-icon>\n\n          Delete\n\n        </button>\n\n      </ion-item-options>\n\n    </ion-item-sliding>\n\n  </ion-list>\n\n  <ion-list>\n\n    <ion-list-header>\n\n      <button item-right clear light (click)="activityAdd()">\n\n        <ion-icon name="add"></ion-icon>\n\n      </button>\n\n      Activity List\n\n    </ion-list-header>\n\n    <ion-item-sliding *ngFor=\'let activity of activities| async\'>\n\n      <ion-item>\n\n        <h2>{{activity.name}}</h2>\n\n      </ion-item>\n\n      <ion-item-options side="right">\n\n        <button ion-button icon-left color="primary">\n\n          <ion-icon name="eye"></ion-icon>\n\n          Detail\n\n        </button>\n\n        <button ion-button icon-left color="secondary">\n\n          <ion-icon name="create"></ion-icon>\n\n          Edit\n\n        </button>\n\n        <button ion-button icon-left color="danger">\n\n          <ion-icon name="close"></ion-icon>\n\n          Delete\n\n        </button>\n\n      </ion-item-options>\n\n    </ion-item-sliding>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"C:\Development\Ionic\Scorely\src\components\program\program-detail.html"*/
+            selector: 'program-detail',template:/*ion-inline-start:"C:\Development\Ionic\Scorely\src\components\program\program-detail.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>Program Detail</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding class="program-detail">\n\n  <ion-list>\n\n    <ion-item>\n\n	     <h4>{{program.name}}</h4>\n\n	   </ion-item>\n\n\n\n	  <ion-item>\n\n	     <h4>{{program.description}}</h4>\n\n	  </ion-item>\n\n\n\n	</ion-list>\n\n  <ion-list>\n\n    <ion-list-header>\n\n      <button item-right clear light (click)="teamAdd()">\n\n        <ion-icon name="add"></ion-icon>\n\n      </button>\n\n      Team List\n\n    </ion-list-header>\n\n    <ion-item-sliding *ngFor=\'let team of teams | async\'>\n\n      <ion-item>\n\n        <h2>{{team.name}}</h2>\n\n      </ion-item>\n\n      <ion-item-options side="right">\n\n        <button ion-button icon-left color="primary" (click)="teamDetail(team.$key)">\n\n          <ion-icon name="eye"></ion-icon>\n\n          Detail\n\n        </button>\n\n        <button ion-button icon-left color="secondary">\n\n          <ion-icon name="create"></ion-icon>\n\n          Edit\n\n        </button>\n\n        <button ion-button icon-left color="danger">\n\n          <ion-icon name="close"></ion-icon>\n\n          Delete\n\n        </button>\n\n      </ion-item-options>\n\n    </ion-item-sliding>\n\n  </ion-list>\n\n  <ion-list>\n\n    <ion-list-header>\n\n      <button item-right clear light (click)="activityAdd()">\n\n        <ion-icon name="add"></ion-icon>\n\n      </button>\n\n      Activity List\n\n    </ion-list-header>\n\n    <ion-item-sliding *ngFor=\'let activity of activities| async\'>\n\n      <ion-item>\n\n        <h2>{{activity.name}}</h2>\n\n      </ion-item>\n\n      <ion-item-options side="right">\n\n        <button ion-button icon-left color="primary" (click)="activityDetail(activity.$key)">\n\n          <ion-icon name="eye"></ion-icon>\n\n          Detail\n\n        </button>\n\n        <button ion-button icon-left color="secondary" (click)="activityEdit(activity)">\n\n          <ion-icon name="create"></ion-icon>\n\n          Edit\n\n        </button>\n\n        <button ion-button icon-left color="danger" (click)="activityDelete(activity.$key)">\n\n          <ion-icon name="close"></ion-icon>\n\n          Delete\n\n        </button>\n\n      </ion-item-options>\n\n    </ion-item-sliding>\n\n  </ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"C:\Development\Ionic\Scorely\src\components\program\program-detail.html"*/
         }), 
-        __metadata$9('design:paramtypes', [NavController, NavParams, TeamService, ActivityService])
+        __metadata$9('design:paramtypes', [NavController, NavParams, AlertController, TeamService, ActivityService])
     ], ProgramDetail);
     return ProgramDetail;
 }());
@@ -84526,13 +84715,13 @@ var Program = (function () {
     return Program;
 }());
 
-var __decorate$122 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$125 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$15 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$18 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var ProgramEdit = (function () {
@@ -84547,26 +84736,26 @@ var ProgramEdit = (function () {
     ProgramEdit.prototype.submitEditForm = function (key, program) {
         this.programService.editProgram(key, program);
     };
-    __decorate$122([
+    __decorate$125([
         Input(), 
-        __metadata$15('design:type', Program)
+        __metadata$18('design:type', Program)
     ], ProgramEdit.prototype, "program", void 0);
-    ProgramEdit = __decorate$122([
+    ProgramEdit = __decorate$125([
         Component({
-            selector: 'program-edit',template:/*ion-inline-start:"C:\Development\Ionic\Scorely\src\components\program\program-edit.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>Program Edit</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding class="program-edit">\n\n  <ion-list>\n\n    <form (ngSubmit)="submitEditForm(program.$key, program)">\n\n  	 <ion-item>\n\n  	    <ion-label stacked>Name</ion-label>\n\n  	    <ion-input [(ngModel)]="program.name" type="text" ngControl="name"name="name" required></ion-input>\n\n  	  </ion-item>\n\n\n\n  	 <ion-item>\n\n  	   <ion-label stacked>Description</ion-label>\n\n  	   <ion-textarea [(ngModel)]="program.description" ngControl="description" name="description"></ion-textarea>\n\n       <ion-label stacked>{{program.$key}}</ion-label>\n\n  	 </ion-item>\n\n     <ion-item>\n\n       <button ion-button block large type="submit">Edit</button>\n\n    </ion-item>\n\n    <ion-item>\n\n     <button ion-button color="danger" block large navPop>Cancel</button>\n\n   </ion-item>\n\n    </form>\n\n	</ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"C:\Development\Ionic\Scorely\src\components\program\program-edit.html"*/
+            selector: 'program-edit',template:/*ion-inline-start:"C:\Development\Ionic\Scorely\src\components\program\program-edit.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>Program Edit</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding class="program-edit">\n\n  <ion-list>\n\n    <form (ngSubmit)="submitEditForm(program.$key, program)">\n\n  	 <ion-item>\n\n  	    <ion-label stacked>Name</ion-label>\n\n  	    <ion-input [(ngModel)]="program.name" type="text" ngControl="name"name="name" required></ion-input>\n\n  	  </ion-item>\n\n\n\n  	 <ion-item>\n\n  	   <ion-label stacked>Description</ion-label>\n\n  	   <ion-textarea [(ngModel)]="program.description" ngControl="description" name="description"></ion-textarea>\n\n  	 </ion-item>\n\n     <ion-item>\n\n       <button ion-button block large type="submit">Edit</button>\n\n    </ion-item>\n\n    <ion-item>\n\n     <button ion-button color="danger" block large navPop>Cancel</button>\n\n   </ion-item>\n\n    </form>\n\n	</ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"C:\Development\Ionic\Scorely\src\components\program\program-edit.html"*/
         }), 
-        __metadata$15('design:paramtypes', [NavController, NavParams, ProgramService])
+        __metadata$18('design:paramtypes', [NavController, NavParams, ProgramService])
     ], ProgramEdit);
     return ProgramEdit;
 }());
 
-var __decorate$123 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$126 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$16 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$19 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var ProgramAdd = (function () {
@@ -84581,22 +84770,22 @@ var ProgramAdd = (function () {
     ProgramAdd.prototype.logForm = function (form) {
         console.log(form.value);
     };
-    ProgramAdd = __decorate$123([
+    ProgramAdd = __decorate$126([
         Component({
             selector: 'program-add',template:/*ion-inline-start:"C:\Development\Ionic\Scorely\src\components\program\program-add.html"*/'<ion-header>\n\n  <ion-navbar>\n\n    <ion-title>Program Add</ion-title>\n\n  </ion-navbar>\n\n</ion-header>\n\n\n\n<ion-content padding class="program-add">\n\n  <ion-list>\n\n    <form (ngSubmit)="submitAddForm()">\n\n  	 <ion-item>\n\n  	    <ion-label stacked>Name</ion-label>\n\n  	    <ion-input [(ngModel)]="newProgram.name" type="text" ngControl="name"name="name" required></ion-input>\n\n  	  </ion-item>\n\n\n\n  	 <ion-item>\n\n  	   <ion-label stacked>Description</ion-label>\n\n  	   <ion-textarea [(ngModel)]="newProgram.description" ngControl="description" name="description"></ion-textarea>\n\n  	 </ion-item>\n\n     <ion-item>\n\n       <button ion-button block large type="submit">Add</button>\n\n    </ion-item>\n\n    <ion-item>\n\n     <button ion-button color="danger" block large navPop>Cancel</button>\n\n   </ion-item>\n\n    </form>\n\n	</ion-list>\n\n</ion-content>\n\n'/*ion-inline-end:"C:\Development\Ionic\Scorely\src\components\program\program-add.html"*/
         }), 
-        __metadata$16('design:paramtypes', [NavController, ProgramService])
+        __metadata$19('design:paramtypes', [NavController, ProgramService])
     ], ProgramAdd);
     return ProgramAdd;
 }());
 
-var __decorate$121 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
+var __decorate$124 = (undefined && undefined.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
-var __metadata$14 = (undefined && undefined.__metadata) || function (k, v) {
+var __metadata$17 = (undefined && undefined.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 var ProgramList = (function () {
@@ -84648,11 +84837,11 @@ var ProgramList = (function () {
         });
         confirm.present();
     };
-    ProgramList = __decorate$121([
+    ProgramList = __decorate$124([
         Component({
             selector: 'program-list',template:/*ion-inline-start:"C:\Development\Ionic\Scorely\src\components\program\program-list.html"*/'<ion-list>\n\n  <ion-list-header>\n\n    <button item-right clear light (click)="programAdd()">\n\n      <ion-icon name="add"></ion-icon>\n\n    </button>\n\n    Program List\n\n  </ion-list-header>\n\n  <ion-item-sliding *ngFor=\'let program of programs | async\'>\n\n    <ion-item>\n\n      <h2>{{program.name}}</h2>\n\n      <h3>{{program.description}}</h3>\n\n    </ion-item>\n\n    <ion-item-options side="right">\n\n      <button ion-button icon-left color="primary" (click)="programDetail(program.$key, program)">\n\n        <ion-icon name="eye"></ion-icon>\n\n        Detail\n\n      </button>\n\n      <button ion-button icon-left color="secondary" (click)="programEdit(program)">\n\n        <ion-icon name="create"></ion-icon>\n\n        Edit\n\n      </button>\n\n      <button ion-button icon-left color="danger" (click)="programDelete(program.$key)">\n\n        <ion-icon name="close"></ion-icon>\n\n        Delete\n\n      </button>\n\n    </ion-item-options>\n\n  </ion-item-sliding>\n\n</ion-list>\n\n'/*ion-inline-end:"C:\Development\Ionic\Scorely\src\components\program\program-list.html"*/
         }), 
-        __metadata$14('design:paramtypes', [NavController, AlertController, ProgramService])
+        __metadata$17('design:paramtypes', [NavController, AlertController, ProgramService])
     ], ProgramList);
     return ProgramList;
 }());
@@ -84693,8 +84882,11 @@ var AppModule = (function () {
                 ProgramList,
                 ProgramEdit,
                 ProgramAdd,
+                ActivityDetail,
                 ActivityAdd,
-                TeamDetail
+                ActivityEdit,
+                TeamDetail,
+                TeamAdd
             ],
             imports: [
                 IonicModule.forRoot(MyApp),
@@ -84712,8 +84904,11 @@ var AppModule = (function () {
                 ProgramList,
                 ProgramEdit,
                 ProgramAdd,
+                ActivityDetail,
                 ActivityAdd,
-                TeamDetail
+                ActivityEdit,
+                TeamDetail,
+                TeamAdd
             ],
             providers: [
                 ProgramService,

@@ -1,6 +1,6 @@
 import { Team } from '../../components/team/team';
 
-export const TEAMS: Team[] = [
+/*export const TEAMS: Team[] = [
   {id: 11, name: 'Team A', description: 'abc def ghi jkl mno pqr stu',
    point: [3, 4, 5], program_id: "1", activity: ['Activity 1', 'Activity 2', 'Activity 3']},
   {id: 12, name: 'Team Narco', description: 'abc def ghi jkl mno pqr stu',
@@ -22,3 +22,4 @@ export const TEAMS: Team[] = [
   {id: 20, name: 'Team Tornado', description: 'abc def ghi jkl mno pqr stu',
    point: [3, 4, 5], program_id: "1", activity: ['Activity 1', 'Activity 2', 'Activity 3']}
 ];
+*/

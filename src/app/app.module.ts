@@ -12,6 +12,9 @@ import { ProgramList } from '../components/program/program-list';
 import { ProgramAdd } from '../components/program/program-add';
 import { ProgramEdit } from '../components/program/program-edit';
 import { ActivityAdd } from '../components/activity/activity-add';
+import { ActivityEdit } from '../components/activity/activity-edit';
+import { ActivityDetail } from '../components/activity/activity-detail';
+import { TeamAdd } from '../components/team/team-add';
 import { TeamDetail } from '../components/team/team-detail';
 import { ActivityService } from '../providers/activity-service/activity-service';
 import { TeamService } from '../providers/team-service/team-service';
@@ -43,8 +46,11 @@ const fbAuthConf = {
     ProgramList,
     ProgramEdit,
     ProgramAdd,
+    ActivityDetail,
     ActivityAdd,
-    TeamDetail
+    ActivityEdit,
+    TeamDetail,
+    TeamAdd
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -62,8 +68,11 @@ const fbAuthConf = {
     ProgramList,
     ProgramEdit,
     ProgramAdd,
+    ActivityDetail,
     ActivityAdd,
-    TeamDetail
+    ActivityEdit,
+    TeamDetail,
+    TeamAdd
   ],
   providers: [
   ProgramService,

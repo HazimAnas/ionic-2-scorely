@@ -1,0 +1,27 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Activity Edit</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="activity-edit">
+  <ion-list>
+    <form (ngSubmit)="submitEditForm(activity.$key, activity)">
+  	 <ion-item>
+  	    <ion-label stacked>Name</ion-label>
+  	    <ion-input [(ngModel)]="activity.name" type="text" ngControl="name" name="name" required></ion-input>
+  	  </ion-item>
+
+  	 <ion-item>
+  	   <ion-label stacked>Description</ion-label>
+  	   <ion-textarea [(ngModel)]="activity.description" ngControl="description" name="description"></ion-textarea>
+  	 </ion-item>
+     <ion-item>
+       <button ion-button block large type="submit">Edit</button>
+    </ion-item>
+    <ion-item>
+     <button ion-button color="danger" block large navPop>Cancel</button>
+   </ion-item>
+    </form>
+	</ion-list>
+</ion-content>
