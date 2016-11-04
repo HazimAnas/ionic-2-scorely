@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, ViewController } from 'ionic-angular';
 import {Observable} from 'rxjs/Observable';
 import { AuthService } from '../../providers/auth-service/auth-service';
 import { TabsPage } from '../tabs/tabs';
@@ -17,20 +17,11 @@ import { AngularFire } from 'angularfire2';
 })
 export class LoginPage {
 
-  constructor(public navCtrl: NavController, public as: AuthService, public af: AngularFire) {
+  constructor(public navCtrl: NavController, public as: AuthService, public af: AngularFire, private viewCtrl: ViewController) {
 
   }
 
-  ionViewWillEnter() {
-    /*if(this.as.checkAuth()){
-        console.log('Logged in: ' + this.as.user);
-        console.log(this.as.user);
-        this.navCtrl.setRoot(TabsPage);
-        this.navCtrl.push(TabsPage);
-    }
-    else{
-        console.log("Not logged in please log in.");
-    }*/
+  ngOnInit() {
     this.af.auth.subscribe(user => {
       if(user) {
         // user logged in
@@ -46,8 +37,23 @@ export class LoginPage {
     });
   }
 
+  ionViewWillEnter() {
+    this.viewCtrl.showBackButton(false);
+    /*if(this.as.checkAuth()){
+        console.log('Logged in: ' + this.as.user);
+        console.log(this.as.user);
+        this.navCtrl.setRoot(TabsPage);
+        this.navCtrl.push(TabsPage);
+    }
+    else{
+        console.log("Not logged in please log in.");
+    }*/
+
+  }
+
   loginGoogle() {
-    this.as.login();
+    //this.as.login();
+    this.as.googlePlusLogin();
     //this.navCtrl.push(TabsPage).catch(()=> console.log('should I stay or should I go now
   }
 

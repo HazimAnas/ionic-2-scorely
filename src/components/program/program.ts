@@ -1,4 +1,5 @@
 export class Program {
+	$key: string;
 	name: string;
 	description: string;
 	team: string[];

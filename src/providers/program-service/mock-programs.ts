@@ -1,6 +1,6 @@
 import { Program } from "../../components/program/program";
 
-export const PROGRAMS: Program[] = [
+/*export const PROGRAMS: Program[] = [
   {name: "Program A", description: "abc def ghi jkl mno pqr stu",
    team: ["team1", "team2", "team3"], activity: ["Activity 1", "Activity 2", "Activity 3"]},
   {name: "Program Narco", description: "abc def ghi jkl mno pqr stu",
@@ -21,4 +21,4 @@ export const PROGRAMS: Program[] = [
    team: ["team1", "team2", "team3"], activity: ["Activity 1", "Activity 2", "Activity 3"]},
   {name: "Program Tornado", description: "abc def ghi jkl mno pqr stu",
    team: ["team1", "team2", "team3"], activity: ["Activity 1", "Activity 2", "Activity 3"]}
-];
+];*/

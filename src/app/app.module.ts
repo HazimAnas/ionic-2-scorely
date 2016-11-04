@@ -54,7 +54,7 @@ const fbAuthConf = {
   ],
   imports: [
     IonicModule.forRoot(MyApp),
-    AngularFireModule.initializeApp(fbConf, fbAuthConf)
+    AngularFireModule.initializeApp(fbConf)
   ],
   bootstrap: [IonicApp],
   entryComponents: [

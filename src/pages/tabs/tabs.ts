@@ -22,7 +22,7 @@ export class TabsPage {
   }
 
   ionViewWillEnter() {
-    /*console.log("Current user");
+    console.log("Current user");
     console.log(this.as.user);
     if(this.as.checkAuth()){
         console.log('Logged in: ' + this.as.user);
@@ -32,7 +32,7 @@ export class TabsPage {
         console.log("Not logged in please log in.");
         this.navCtrl.setRoot(LoginPage);
         this.navCtrl.push(LoginPage);
-    }
+    }/*
     this.af.auth.subscribe(user => {
       if(user) {
         // user logged in
@@ -44,12 +44,6 @@ export class TabsPage {
         console.log("Fail "+ user);
         this.navCtrl.push(LoginPage);
       }
-    });
-    if(this.as.checkAuth()) {
-      console.log("tab "+this.as.getUser());
-    }
-    else {
-      this.navCtrl.push(LoginPage);
-    }*/
+    });*/
   }
 }
