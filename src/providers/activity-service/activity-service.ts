@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Activity } from '../../components/activity/activity';
+import { Team } from '../../components/team/team';
 //import { PROGRAMS } from './mock-programs';
 import { AngularFire, FirebaseObjectObservable, FirebaseListObservable } from 'angularfire2';
 import { AuthService } from '../auth-service/auth-service';
@@ -34,7 +35,7 @@ export class ActivityService {
 
   addActivity(activity){
     var activityTeamList = {};
-    var team = this.af.database.list('/team/'+this.activeProgram);
+    var team : FirebaseListObservable <Team[]> = this.af.database.list('/team/'+this.activeProgram);
 
     team.subscribe(teams=>{
      teams.forEach(team => {
@@ -49,6 +50,13 @@ export class ActivityService {
       team: activityTeamList
     }).then( newActivity => {
       this.newActivity = newActivity;
+      team.subscribe(teams => {
+        teams.forEach( team => {
+          console.log('object url :' +`/team/${this.activeProgram}/${team.$key}/activity/${newActivity.getKey()}`);
+          this.af.database.object(`/team/${this.activeProgram}/${team.$key}/activity/${newActivity.getKey()}`)
+          .set({ name : activity.name});
+        })
+      })
     }
       , error => {
         console.log(error);

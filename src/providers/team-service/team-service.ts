@@ -46,6 +46,13 @@ export class TeamService {
       activity: teamActivityList
     }).then( newTeam => {
       this.newTeam = newTeam;
+      activity.subscribe(activities => {
+        activities.forEach( activity => {
+          console.log('object url :' +`/activity/${this.activeProgram}/${activity.$key}/team/${newTeam.getKey()}`);
+          this.af.database.object(`/activity/${this.activeProgram}/${activity.$key}/team/${newTeam.getKey()}`)
+          .set({ name : team.name});
+        })
+      })
     }
       , error => {
         console.log(error);
