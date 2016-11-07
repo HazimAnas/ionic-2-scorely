@@ -109,10 +109,11 @@ export class AuthService {
 
                  firebase.auth().signInWithCredential(provider)
                   .then((success) => {
-                    console.log("Firebase success: " + JSON.stringify(success));
+                    console.log("Firebase success: " + JSON.stringify(success)+ " url "+`/user/${this.encodeAsFirebaseKey(success.email)}/`);
                     //this.displayAlert(success,"signInWithCredential successful")
                     this.userProfile = userData;
                     this.user = success;
+                    this.af.database.object(`/user/${this.encodeAsFirebaseKey(success.email)}/`).set({ name : success.displayName});
                   })
                   .catch((error) => {
                     console.log("Firebase failure 1: " + error);
@@ -128,7 +129,14 @@ export class AuthService {
             })
             //this.af.auth.unsubscribe()
        //})
-
-  }
-
+     }
+  encodeAsFirebaseKey(string) {
+    return string.replace(/\./g, '%2E')
+      .replace(/\%/g, '%25')      
+      .replace(/\#/g, '%23')
+      .replace(/\$/g, '%24')
+      .replace(/\//g, '%2F')
+      .replace(/\[/g, '%5B')
+      .replace(/\]/g, '%5D');
+  };
 }

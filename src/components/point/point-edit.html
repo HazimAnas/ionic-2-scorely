@@ -1,0 +1,22 @@
+<ion-header>
+  <ion-navbar>
+    <ion-title>Activity Add</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding class="point-edit">
+  <ion-list>
+    <form (ngSubmit)="submitAddForm()">
+  	 <ion-item>
+  	    <ion-label stacked>Point Amount</ion-label>
+  	    <ion-input [(ngModel)]="amount" type="number" ngControl="amount" name="amount" required></ion-input>
+  	  </ion-item>
+     <ion-item>
+       <button ion-button block large type="submit">Add</button>
+    </ion-item>
+    <ion-item>
+     <button ion-button color="danger" block large navPop>Cancel</button>
+   </ion-item>
+    </form>
+	</ion-list>
+</ion-content>

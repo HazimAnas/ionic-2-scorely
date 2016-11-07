@@ -22,10 +22,10 @@ export class ActivityDetail {
     this.activityObs.subscribe(activity=>{
          this.activity.name = activity.name,
          this.activity.description = activity.description,
-         this.activity.team = activity.team
+         this.activity.team = this.activity.team = Object.keys(activity.team).map(key => Object.assign({ key }, activity.team[key]));
         });
 
-    this.activity.team = Object.keys(this.activity.team).map((key)=>{ return this.activity.team[key]});
+    //this.activity.team = Object.keys(this.activity.team).map((key)=>{ return this.activity.team[key]});
 
     console.log(this.activity);
   }

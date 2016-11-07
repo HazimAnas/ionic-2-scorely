@@ -19,24 +19,15 @@
     <ion-list-header>
       Team Point
     </ion-list-header>
-    <ion-item-sliding *ngFor='let team of activity.team'>
+    <ion-item *ngFor='let team of activity.team'>
       <ion-item>
         <h2>{{team.name}}</h2>
+        {{team.amount || "0"}} Points
+        <button ion-button item-right icon-left color="primary" (click)='editPoint(activity.name, activity.key, team.$key)'>
+          <ion-icon name="add"></ion-icon>
+          Edit Point
+        </button>
       </ion-item>
-      <ion-item-options side="right">
-        <button ion-button icon-left color="primary">
-          <ion-icon name="eye"></ion-icon>
-          Detail
-        </button>
-        <button ion-button icon-left color="secondary">
-          <ion-icon name="create"></ion-icon>
-          Edit
-        </button>
-        <button ion-button icon-left color="danger">
-          <ion-icon name="close"></ion-icon>
-          Delete
-        </button>
-      </ion-item-options>
-    </ion-item-sliding>
+    </ion-item>
   </ion-list>
 </ion-content>

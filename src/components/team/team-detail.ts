@@ -3,6 +3,7 @@ import {NavController,NavParams} from 'ionic-angular';
 import {Team} from './team';
 import {FirebaseObjectObservable} from 'angularfire2';
 import { TeamService } from '../../providers/team-service/team-service';
+import { PointEdit } from '../point/point-edit';
 
 @Component({
   selector: 'team-detail',
@@ -22,12 +23,23 @@ export class TeamDetail {
 
     this.teamObs = this.teamservice.getTeamsById(this.param.get('teamId'));
     this.teamObs.subscribe(team=>{
+         this.team.$key = team.$key,
          this.team.name = team.name,
-         this.team.activity = team.activity
-        });
+         this.team.activity = this.team.activity = Object.keys(team.activity).map(key => Object.assign({ key }, team.activity[key]));
+         console.log("team values " + team);
+       });
 
-    this.team.activity = Object.keys(this.team.activity).map((key)=>{ return this.team.activity[key]});
+
 
     console.log(this.team);
+  }
+
+  editPoint(name, activityId, teamId) {
+    this.navCtrl.push(PointEdit, {
+      name : name,
+      programId : this.teamservice.activeProgram,
+      activityId : activityId,
+      teamId : teamId,
+    })
   }
 }

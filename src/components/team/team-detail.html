@@ -7,7 +7,7 @@
 <ion-content padding>
   <ion-list>
     <ion-item>
-	     <h4>{{team.name}}</h4>
+	     <h2>{{team.name}}</h2>
 	   </ion-item>
 
 	  <ion-item>
@@ -19,24 +19,15 @@
     <ion-list-header>
       Team Point
     </ion-list-header>
-    <ion-item-sliding *ngFor='let activity of team.activity'>
+    <ion-item *ngFor='let activity of team.activity'>
       <ion-item>
         <h2>{{activity.name}}</h2>
+        {{activity.amount || "0"}} Points
+        <button ion-button item-right icon-left color="primary" (click)='editPoint(activity.name, activity.key, team.$key)'>
+          <ion-icon name="add"></ion-icon>
+          Edit Point
+        </button>
       </ion-item>
-      <ion-item-options side="right">
-        <button ion-button icon-left color="primary">
-          <ion-icon name="eye"></ion-icon>
-          Detail
-        </button>
-        <button ion-button icon-left color="secondary">
-          <ion-icon name="create"></ion-icon>
-          Edit
-        </button>
-        <button ion-button icon-left color="danger">
-          <ion-icon name="close"></ion-icon>
-          Delete
-        </button>
-      </ion-item-options>
-    </ion-item-sliding>
+    </ion-item>
   </ion-list>
 </ion-content>

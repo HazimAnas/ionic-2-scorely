@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 import { Team } from '../../components/team/team';
+import { Activity } from '../../components/activity/activity';
 import { AngularFire, FirebaseObjectObservable, FirebaseListObservable } from 'angularfire2';
 import { AuthService } from '../auth-service/auth-service';
 import { ActivityService } from '../activity-service/activity-service';
@@ -26,9 +27,9 @@ export class TeamService {
   }
 
   getTeamsById(teamId) {
-    console.log('/team/'+this.activeProgram+'/'+teamId);
     return this.af.database.object('/team/'+this.activeProgram+'/'+teamId);
   }
+
   addTeam(team){
     var teamActivityList = {};
     var activity = this.af.database.list('/activity/'+this.activeProgram);

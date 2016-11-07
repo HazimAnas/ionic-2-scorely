@@ -16,8 +16,10 @@ import { ActivityEdit } from '../components/activity/activity-edit';
 import { ActivityDetail } from '../components/activity/activity-detail';
 import { TeamAdd } from '../components/team/team-add';
 import { TeamDetail } from '../components/team/team-detail';
+import { PointEdit } from '../components/point/point-edit';
 import { ActivityService } from '../providers/activity-service/activity-service';
 import { TeamService } from '../providers/team-service/team-service';
+import { PointService } from '../providers/point-service/point-service';
 import { AuthService } from '../providers/auth-service/auth-service';
 import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
 
@@ -50,7 +52,8 @@ const fbAuthConf = {
     ActivityAdd,
     ActivityEdit,
     TeamDetail,
-    TeamAdd
+    TeamAdd,
+    PointEdit
   ],
   imports: [
     IonicModule.forRoot(MyApp),
@@ -72,12 +75,14 @@ const fbAuthConf = {
     ActivityAdd,
     ActivityEdit,
     TeamDetail,
-    TeamAdd
+    TeamAdd,
+    PointEdit
   ],
   providers: [
   ProgramService,
   ActivityService,
   TeamService,
+  PointService,
   AuthService
   ]
 })
