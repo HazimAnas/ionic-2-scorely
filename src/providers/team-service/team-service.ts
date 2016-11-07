@@ -18,6 +18,7 @@ export class TeamService {
   public teamList : FirebaseListObservable <Team[]>;
   public newTeam : Team;
   public activeProgram : string;
+  public activityList : FirebaseListObservable <Activity[]>;
 
   constructor(private http: Http, private af: AngularFire) {}
 
@@ -32,9 +33,9 @@ export class TeamService {
 
   addTeam(team){
     var teamActivityList = {};
-    var activity = this.af.database.list('/activity/'+this.activeProgram);
+    this.activityList = this.af.database.list('/activity/'+this.activeProgram);
 
-    activity.subscribe(activities=>{
+    this.activityList.subscribe(activities=>{
      activities.forEach(activity => {
        teamActivityList[activity.$key] = {"name" : activity.name};
      });
@@ -47,13 +48,13 @@ export class TeamService {
       activity: teamActivityList
     }).then( newTeam => {
       this.newTeam = newTeam;
-      activity.subscribe(activities => {
+      this.activityList.subscribe(activities => {
         activities.forEach( activity => {
-          console.log('object url :' +`/activity/${this.activeProgram}/${activity.$key}/team/${newTeam.getKey()}`);
+          console.log('team object url :' +`/activity/${this.activeProgram}/${activity.$key}/team/${newTeam.getKey()}`);
           this.af.database.object(`/activity/${this.activeProgram}/${activity.$key}/team/${newTeam.getKey()}`)
           .set({ name : team.name});
-        })
-      })
+        });
+      }).unsubscribe();
     }
       , error => {
         console.log(error);
@@ -69,10 +70,19 @@ export class TeamService {
     }
       , error => {
         console.log(error);
-      });;
+      });
   }
 
   deleteTeam(key) {
     this.teamList.remove(key);
+    this.activityList = this.af.database.list('/activity/'+this.activeProgram);
+
+    this.activityList.subscribe(activities => {
+      activities.forEach( activity => {
+        this.af.database.list(`/activity/${this.activeProgram}/${activity.$key}/team/`)
+        .remove(key);
+      });
+    }).unsubscribe();
+
   }
 }

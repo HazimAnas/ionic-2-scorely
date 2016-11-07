@@ -18,6 +18,7 @@ export class ActivityService {
   public activityList : FirebaseListObservable <Activity[]>;
   public newActivity : Activity;
   public activeProgram : string;
+  public teamList : FirebaseListObservable <Team[]>;
 
   constructor(private http: Http, private af: AngularFire) {
 
@@ -35,9 +36,9 @@ export class ActivityService {
 
   addActivity(activity){
     var activityTeamList = {};
-    var team : FirebaseListObservable <Team[]> = this.af.database.list('/team/'+this.activeProgram);
+    this.teamList = this.af.database.list('/team/'+this.activeProgram);
 
-    team.subscribe(teams=>{
+    this.teamList.subscribe(teams=>{
      teams.forEach(team => {
        activityTeamList[team.$key] = {"name" : team.name};
      });
@@ -50,13 +51,13 @@ export class ActivityService {
       team: activityTeamList
     }).then( newActivity => {
       this.newActivity = newActivity;
-      team.subscribe(teams => {
+      this.teamList.subscribe(teams => {
         teams.forEach( team => {
-          console.log('object url :' +`/team/${this.activeProgram}/${team.$key}/activity/${newActivity.getKey()}`);
+          console.log('activity object url :' +`/team/${this.activeProgram}/${team.$key}/activity/${newActivity.getKey()}`);
           this.af.database.object(`/team/${this.activeProgram}/${team.$key}/activity/${newActivity.getKey()}`)
           .set({ name : activity.name});
-        })
-      })
+        });
+      }).unsubscribe();
     }
       , error => {
         console.log(error);
@@ -73,10 +74,20 @@ export class ActivityService {
     }
       , error => {
         console.log(error);
-      });;
+      });
   }
 
   deleteActivity(key) {
     this.activityList.remove(key);
+    this.teamList = this.af.database.list('/team/'+this.activeProgram);
+
+    this.teamList.subscribe(teams => {
+      teams.forEach( team => {
+        console.log('activity object url :' +`/team/${this.activeProgram}/${team.$key}/activity/`);
+        this.af.database.list(`/team/${this.activeProgram}/${team.$key}/activity/`)
+        .remove(key);
+      });
+    }).unsubscribe();
+
   }
 }
