@@ -23,9 +23,15 @@ export class TeamDetail {
 
     this.teamObs = this.teamservice.getTeamsById(this.param.get('teamId'));
     this.teamObs.subscribe(team=>{
-         this.team.$key = team.$key,
-         this.team.name = team.name,
-         this.team.activity = this.team.activity = Object.keys(team.activity).map(key => Object.assign({ key }, team.activity[key]));
+         this.team.$key = team.$key;
+         this.team.name = team.name;
+         this.team.description = team.description;
+         if(team.activity) {
+           this.team.activity = Object.keys(team.activity).map(key => Object.assign({ key }, team.activity[key]))
+         }
+         else {
+           this.team.activity = [];
+         }
          console.log("team values " + team);
        });
 

@@ -27,7 +27,11 @@ export class ProgramService {
     this.programsList = this.af.database.list('/program/'+this.userID);
   }
 
-  addProgram(program){
+  getSharedPrograms() {
+
+  }
+
+  addProgram(program): boolean {
     this.programsList.push({
       name: program.name,
       description: program.description,
@@ -38,9 +42,10 @@ export class ProgramService {
         console.log(error);
         this.newProgram = null;
       });
+      return true;
   }
 
-  editProgram(key : string, program: Program) {
+  editProgram(key : string, program: Program): boolean {
     this.programsList.update(key, {
       name: program.name,
       description: program.description
@@ -49,7 +54,8 @@ export class ProgramService {
     }
       , error => {
         console.log(error);
-      });;
+      });
+      return true;
   }
 
   deleteProgram(key) {

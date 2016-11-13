@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {NavController} from 'ionic-angular';
+import {NavController, AlertController} from 'ionic-angular';
 import { Team } from './team';
 import {TeamService } from '../../providers/team-service/team-service';
 
@@ -10,12 +10,22 @@ import {TeamService } from '../../providers/team-service/team-service';
 export class TeamAdd {
   public newTeam: Team;
 
-  constructor(private navCtrl: NavController, public teamService: TeamService) {
+  constructor(private navCtrl: NavController, public alertCtrl: AlertController, public teamService: TeamService) {
     this.newTeam = new Team;
   }
 
   submitAddForm() {
-    this.teamService.addTeam(this.newTeam);
+    if(this.teamService.addTeam(this.newTeam)) {
+      this.navCtrl.pop();
+    }
+    else {
+      let alert = this.alertCtrl.create({
+                                          title: 'Error',
+                                          subTitle: 'Fail to add new team.',
+                                          buttons: ['OK']
+                                        });
+      alert.present();
+    }
   }
 
   logForm(form) {

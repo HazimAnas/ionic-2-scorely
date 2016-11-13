@@ -4,10 +4,10 @@
   </ion-navbar>
 </ion-header>
 
-<ion-content padding class="program-detail">
+<ion-content padding>
   <ion-list>
     <ion-item>
-	     <h4>{{program.name}}</h4>
+	     <h2>{{program.name}}</h2>
 	   </ion-item>
 
 	  <ion-item>
@@ -23,19 +23,15 @@
       Team List
     </ion-list-header>
     <ion-item-sliding *ngFor='let team of teams | async'>
-      <ion-item>
+      <button ion-item (click)="teamDetail(team.$key)">
         <h2>{{team.name}}</h2>
-      </ion-item>
+      </button>
       <ion-item-options side="right">
-        <button ion-button icon-left color="primary" (click)="teamDetail(team.$key)">
-          <ion-icon name="eye"></ion-icon>
-          Detail
-        </button>
-        <button ion-button icon-left color="secondary">
+        <button ion-button icon-left color="secondary" (click)="teamEdit(team)">
           <ion-icon name="create"></ion-icon>
           Edit
         </button>
-        <button ion-button icon-left color="danger">
+        <button ion-button icon-left color="danger" (click)="teamDelete(team.$key)">
           <ion-icon name="close"></ion-icon>
           Delete
         </button>
@@ -50,14 +46,10 @@
       Activity List
     </ion-list-header>
     <ion-item-sliding *ngFor='let activity of activities| async'>
-      <ion-item>
+      <button ion-item (click)="activityDetail(activity.$key)">
         <h2>{{activity.name}}</h2>
-      </ion-item>
+      </button>
       <ion-item-options side="right">
-        <button ion-button icon-left color="primary" (click)="activityDetail(activity.$key)">
-          <ion-icon name="eye"></ion-icon>
-          Detail
-        </button>
         <button ion-button icon-left color="secondary" (click)="activityEdit(activity)">
           <ion-icon name="create"></ion-icon>
           Edit

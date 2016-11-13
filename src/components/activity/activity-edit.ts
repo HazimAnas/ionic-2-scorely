@@ -20,6 +20,8 @@ export class ActivityEdit {
   }
 
   submitEditForm(key, activity: Activity) {
-    this.activityService.editActivity(key, activity);
+    if(this.activityService.editActivity(key, activity)) {
+      this.navCtrl.pop();
+    }
   }
 }

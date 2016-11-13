@@ -6,6 +6,7 @@ import { Team } from '../team/team';
 import { TeamService } from '../../providers/team-service/team-service';
 import { ActivityService } from '../../providers/activity-service/activity-service';
 import { TeamAdd } from '../team/team-add';
+import { TeamEdit } from '../team/team-edit';
 import { TeamDetail } from '../team/team-detail';
 import { ActivityAdd } from '../activity/activity-add';
 import { ActivityEdit } from '../activity/activity-edit';
@@ -50,6 +51,34 @@ export class ProgramDetail {
           });
   }
 
+  teamEdit(team) {
+    this.navCtrl.push(TeamEdit, {
+            team: team
+          });
+  }
+
+  teamDelete(key) {
+    let confirm = this.alertCtrl.create({
+      title: 'Delete Confirmation',
+      message: 'This action is irreversible.Delete this team?',
+      buttons: [
+        {
+          text: 'Cancel',
+          handler: () => {
+            console.log('Disagree clicked');
+          }
+        },
+        {
+          text: 'Delete',
+          handler: () => {
+            this.teamService.deleteTeam(key);
+          }
+        }
+      ]
+    });
+    confirm.present();
+  }
+
   activityAdd() {
     this.navCtrl.push(ActivityAdd);
   }
@@ -69,7 +98,7 @@ export class ProgramDetail {
   activityDelete(key) {
     let confirm = this.alertCtrl.create({
       title: 'Delete Confirmation',
-      message: 'This action is irreversible.Delete this program?',
+      message: 'This action is irreversible.Delete this activity?',
       buttons: [
         {
           text: 'Cancel',

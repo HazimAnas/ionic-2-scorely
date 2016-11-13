@@ -15,7 +15,9 @@ export class ActivityAdd {
   }
 
   submitAddForm() {
-    this.activityService.addActivity(this.newActivity);
+    if(this.activityService.addActivity(this.newActivity)) {
+      this.navCtrl.pop();
+    }
   }
 
   logForm(form) {

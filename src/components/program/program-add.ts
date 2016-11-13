@@ -15,7 +15,9 @@ export class ProgramAdd {
   }
 
   submitAddForm() {
-    this.programService.addProgram(this.newProgram);
+    if(this.programService.addProgram(this.newProgram)) {
+      this.navCtrl.pop();
+    }
   }
 
   logForm(form) {

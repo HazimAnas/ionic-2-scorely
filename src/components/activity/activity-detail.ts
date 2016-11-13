@@ -20,9 +20,15 @@ export class ActivityDetail {
   getActivity() {
     this.activityObs = this.activityService.getActivitiesById(this.param.get('activityId'));
     this.activityObs.subscribe(activity=>{
-         this.activity.name = activity.name,
-         this.activity.description = activity.description,
-         this.activity.team = this.activity.team = Object.keys(activity.team).map(key => Object.assign({ key }, activity.team[key]));
+         this.activity.$key = activity.key;
+         this.activity.name = activity.name;
+         this.activity.description = activity.description;
+         if(activity.team) {
+           this.activity.team = Object.keys(activity.team).map(key => Object.assign({ key }, activity.team[key]))
+         }
+         else {
+           this.activity.team = [];
+         }
         });
 
     //this.activity.team = Object.keys(this.activity.team).map((key)=>{ return this.activity.team[key]});

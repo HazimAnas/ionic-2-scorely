@@ -6,15 +6,11 @@
     Program List
   </ion-list-header>
   <ion-item-sliding *ngFor='let program of programs | async'>
-    <ion-item>
+    <button ion-item (click)="programDetail(program.$key, program)">
       <h2>{{program.name}}</h2>
       <h3>{{program.description}}</h3>
-    </ion-item>
+    </button>
     <ion-item-options side="right">
-      <button ion-button icon-left color="primary" (click)="programDetail(program.$key, program)">
-        <ion-icon name="eye"></ion-icon>
-        Detail
-      </button>
       <button ion-button icon-left color="secondary" (click)="programEdit(program)">
         <ion-icon name="create"></ion-icon>
         Edit

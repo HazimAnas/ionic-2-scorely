@@ -27,6 +27,7 @@ export class ActivityService {
   getActivities(programId) {
     this.activeProgram = programId;
     this.activityList = this.af.database.list('/activity/'+programId);
+    this.teamList = this.af.database.list('/team/'+this.activeProgram);
   }
 
   getActivitiesById(activityId) {
@@ -34,9 +35,8 @@ export class ActivityService {
     return this.af.database.object('/activity/'+this.activeProgram+'/'+activityId);
   }
 
-  addActivity(activity){
+  addActivity(activity): boolean {
     var activityTeamList = {};
-    this.teamList = this.af.database.list('/team/'+this.activeProgram);
 
     this.teamList.subscribe(teams=>{
      teams.forEach(team => {
@@ -63,23 +63,31 @@ export class ActivityService {
         console.log(error);
         this.newActivity = null;
       });
+      return true;
   }
 
-  editActivity(key : string, activity: Activity) {
+  editActivity(key : string, activity: Activity): boolean {
     this.activityList.update(key, {
       name: activity.name,
       description: activity.description
     }).then( newActivity => {
       console.log(newActivity);
+      this.teamList.subscribe(teams => {
+        teams.forEach( team => {
+          console.log('activity object url :' +`/team/${this.activeProgram}/${team.$key}/activity/${key}`);
+          this.af.database.object(`/team/${this.activeProgram}/${team.$key}/activity/${key}`)
+          .update({ name : activity.name});
+        });
+      }).unsubscribe();
     }
       , error => {
         console.log(error);
       });
+      return true;
   }
 
   deleteActivity(key) {
     this.activityList.remove(key);
-    this.teamList = this.af.database.list('/team/'+this.activeProgram);
 
     this.teamList.subscribe(teams => {
       teams.forEach( team => {

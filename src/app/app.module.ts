@@ -15,6 +15,7 @@ import { ActivityAdd } from '../components/activity/activity-add';
 import { ActivityEdit } from '../components/activity/activity-edit';
 import { ActivityDetail } from '../components/activity/activity-detail';
 import { TeamAdd } from '../components/team/team-add';
+import { TeamEdit } from '../components/team/team-edit';
 import { TeamDetail } from '../components/team/team-detail';
 import { PointEdit } from '../components/point/point-edit';
 import { ActivityService } from '../providers/activity-service/activity-service';
@@ -53,6 +54,7 @@ const fbAuthConf = {
     ActivityEdit,
     TeamDetail,
     TeamAdd,
+    TeamEdit,
     PointEdit
   ],
   imports: [
@@ -76,6 +78,7 @@ const fbAuthConf = {
     ActivityEdit,
     TeamDetail,
     TeamAdd,
+    TeamEdit,
     PointEdit
   ],
   providers: [

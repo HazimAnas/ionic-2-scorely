@@ -4,10 +4,10 @@ import { Program } from './program';
 import { ProgramService } from '../../providers/program-service/program-service';
 
 @Component({
-  selector: 'program-edit',
-  templateUrl: 'program-edit.html'
+  selector: 'program-sharing',
+  templateUrl: 'program-sharing.html'
 })
-export class ProgramEdit {
+export class ProgramSharing {
   @Input() program: Program;
 
   constructor(private navCtrl: NavController, param: NavParams, public programService: ProgramService) {
@@ -22,5 +22,8 @@ export class ProgramEdit {
     if(this.programService.editProgram(key, program)) {
       this.navCtrl.pop();
     }
+  }
+  submitSearchEmailForm(email) {
+    
   }
 }

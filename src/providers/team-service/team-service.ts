@@ -25,15 +25,15 @@ export class TeamService {
   getTeams(programId) {
     this.activeProgram = programId;
     this.teamList = this.af.database.list('/team/'+programId);
+    this.activityList = this.af.database.list('/activity/'+this.activeProgram);
   }
 
   getTeamsById(teamId) {
     return this.af.database.object('/team/'+this.activeProgram+'/'+teamId);
   }
 
-  addTeam(team){
+  addTeam(team): boolean{
     var teamActivityList = {};
-    this.activityList = this.af.database.list('/activity/'+this.activeProgram);
 
     this.activityList.subscribe(activities=>{
      activities.forEach(activity => {
@@ -55,27 +55,39 @@ export class TeamService {
           .set({ name : team.name});
         });
       }).unsubscribe();
+      return true;
     }
       , error => {
         console.log(error);
         this.newTeam = null;
+        return false;
       });
+      return true;
   }
 
-  editTeam(key : string, team: Team) {
+  editTeam(key : string, team: Team): boolean {
     this.teamList.update(key, {
       name: team.name,
-    }).then( newTeam => {
-      console.log(newTeam);
+      description : team.description
+    }).then( () => {
+      this.activityList.subscribe(activities => {
+        activities.forEach( activity => {
+          console.log('team object url :' +`/activity/${this.activeProgram}/${activity.$key}/team/${key}`);
+          this.af.database.object(`/activity/${this.activeProgram}/${activity.$key}/team/${key}`)
+          .update({ name : team.name});
+        });
+      }).unsubscribe();
+      return true;
     }
       , error => {
         console.log(error);
+        return false;
       });
+      return true;
   }
 
   deleteTeam(key) {
     this.teamList.remove(key);
-    this.activityList = this.af.database.list('/activity/'+this.activeProgram);
 
     this.activityList.subscribe(activities => {
       activities.forEach( activity => {
