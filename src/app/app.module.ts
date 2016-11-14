@@ -11,6 +11,7 @@ import { ProgramDetail } from '../components/program/program-detail';
 import { ProgramList } from '../components/program/program-list';
 import { ProgramAdd } from '../components/program/program-add';
 import { ProgramEdit } from '../components/program/program-edit';
+import { ProgramSharing } from '../components/program/program-sharing';
 import { ActivityAdd } from '../components/activity/activity-add';
 import { ActivityEdit } from '../components/activity/activity-edit';
 import { ActivityDetail } from '../components/activity/activity-detail';
@@ -49,6 +50,7 @@ const fbAuthConf = {
     ProgramList,
     ProgramEdit,
     ProgramAdd,
+    ProgramSharing,
     ActivityDetail,
     ActivityAdd,
     ActivityEdit,
@@ -73,6 +75,7 @@ const fbAuthConf = {
     ProgramList,
     ProgramEdit,
     ProgramAdd,
+    ProgramSharing,
     ActivityDetail,
     ActivityAdd,
     ActivityEdit,

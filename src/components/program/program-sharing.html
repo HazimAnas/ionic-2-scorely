@@ -6,22 +6,20 @@
 
 <ion-content padding class="program-sharing">
   <ion-list>
-    <form (ngSubmit)="submitEditForm(program.$key, program)">
   	 <ion-item>
   	    <ion-label stacked>Name</ion-label>
-  	    <ion-input [(ngModel)]="program.name" type="text" ngControl="name"name="name" required></ion-input>
+  	    <ion-input [(ngModel)]="email" type="email" name="email" required></ion-input>
   	  </ion-item>
-
-  	 <ion-item>
-  	   <ion-label stacked>Description</ion-label>
-  	   <ion-textarea [(ngModel)]="program.description" ngControl="description" name="description"></ion-textarea>
-  	 </ion-item>
      <ion-item>
-       <button ion-button block large type="submit">Edit</button>
+       <button ion-button block large type="submit" (click)="searchEmail(email)">Edit</button>
     </ion-item>
-    <ion-item>
-     <button ion-button color="danger" block large navPop>Cancel</button>
-   </ion-item>
-    </form>
 	</ion-list>
+  <ion-list *ngIf="user">
+    <ion-list-header>
+      Result
+    </ion-list-header>
+    <ion-item>
+      {{user.name}}
+    </ion-item>
+  </ion-list>
 </ion-content>

@@ -113,7 +113,7 @@ export class AuthService {
                     //this.displayAlert(success,"signInWithCredential successful")
                     this.userProfile = userData;
                     this.user = success;
-                    this.af.database.object(`/user/${this.encodeAsFirebaseKey(success.email)}/`).set({ name : success.displayName});
+                    this.af.database.object(`/user/${this.encodeAsFirebaseKey(success.email)}/`).set({ name : success.displayName, uid : this.user.uid });
                   })
                   .catch((error) => {
                     console.log("Firebase failure 1: " + error);
@@ -130,13 +130,15 @@ export class AuthService {
             //this.af.auth.unsubscribe()
        //})
      }
+
   encodeAsFirebaseKey(string) {
     return string.replace(/\./g, '%2E')
-      .replace(/\%/g, '%25')      
+      .replace(/\%/g, '%25')
       .replace(/\#/g, '%23')
       .replace(/\$/g, '%24')
       .replace(/\//g, '%2F')
       .replace(/\[/g, '%5B')
       .replace(/\]/g, '%5D');
-  };
+  }
+
 }

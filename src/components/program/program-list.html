@@ -11,6 +11,10 @@
       <h3>{{program.description}}</h3>
     </button>
     <ion-item-options side="right">
+      <button ion-button icon-left color="primary" (click)="programShare(program)">
+        <ion-icon name="people"></ion-icon>
+        Delete
+      </button>
       <button ion-button icon-left color="secondary" (click)="programEdit(program)">
         <ion-icon name="create"></ion-icon>
         Edit

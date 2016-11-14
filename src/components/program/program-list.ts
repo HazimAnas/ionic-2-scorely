@@ -5,6 +5,7 @@ import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'a
 import {ProgramDetail} from './program-detail';
 import {ProgramEdit} from './program-edit';
 import {ProgramAdd} from './program-add';
+import {ProgramSharing} from './program-sharing';
 import { Program } from './program';
 import { ProgramService } from '../../providers/program-service/program-service';
 
@@ -64,5 +65,11 @@ export class ProgramList implements OnInit {
       ]
     });
     confirm.present();
+  }
+
+  programShare(program) {
+    this.navCtrl.push( ProgramSharing, {
+      program: program
+    })
   }
 }
