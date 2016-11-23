@@ -1,28 +1,50 @@
-<ion-list>
-  <ion-list-header>
-    <button item-right clear light (click)="programAdd()">
-      <ion-icon name="add"></ion-icon>
-    </button>
-    Program List
-  </ion-list-header>
-  <ion-item-sliding *ngFor='let program of programs | async'>
-    <button ion-item (click)="programDetail(program.$key, program)">
-      <h2>{{program.name}}</h2>
-      <h3>{{program.description}}</h3>
-    </button>
-    <ion-item-options side="right">
-      <button ion-button icon-left color="primary" (click)="programShare(program)">
-        <ion-icon name="people"></ion-icon>
-        Delete
+<div padding>
+  <ion-segment [(ngModel)]="programType">
+    <ion-segment-button value="my">
+      My Programs
+    </ion-segment-button>
+    <ion-segment-button value="shared">
+      Shared Programs
+    </ion-segment-button>
+  </ion-segment>
+</div>
+<div [ngSwitch]="programType">
+  <ion-list *ngSwitchCase="'my'">
+    <ion-list-header>
+      <button item-right clear light (click)="programAdd()">
+        <ion-icon name="add"></ion-icon>
       </button>
-      <button ion-button icon-left color="secondary" (click)="programEdit(program)">
-        <ion-icon name="create"></ion-icon>
-        Edit
+      My Program List
+    </ion-list-header>
+    <ion-item-sliding *ngFor='let program of programs | async'>
+      <button ion-item (click)="programDetail(program.$key, program)">
+        <h2>{{program.name}}</h2>
+        <h3>{{program.description}}</h3>
       </button>
-      <button ion-button icon-left color="danger" (click)="programDelete(program.$key)">
-        <ion-icon name="close"></ion-icon>
-        Delete
+      <ion-item-options side="right">
+        <button ion-button icon-left color="primary" (click)="programShare(program)">
+          <ion-icon name="people"></ion-icon>
+          Share
+        </button>
+        <button ion-button icon-left color="secondary" (click)="programEdit(program)">
+          <ion-icon name="create"></ion-icon>
+          Edit
+        </button>
+        <button ion-button icon-left color="danger" (click)="programDelete(program.$key)">
+          <ion-icon name="close"></ion-icon>
+          Delete
+        </button>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+  <ion-list *ngSwitchCase="'shared'">
+    <ion-list-header>
+      Shared Program List
+    </ion-list-header>
+    <ion-item *ngFor='let program of sharedPrograms | async'>
+      <button ion-item (click)="programDetail(program.$key, program)">
+        <h2>{{program.name}}</h2>
+        <h3>{{program.description}}</h3>
       </button>
-    </ion-item-options>
-  </ion-item-sliding>
-</ion-list>
+    </ion-item>
+  </ion-list>

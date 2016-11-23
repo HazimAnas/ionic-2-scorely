@@ -47,6 +47,12 @@ export class ProgramSharing {
     })
   }
 
+  shareWithUser(user) {
+    var userEmailKey = this.encodeAsFirebaseKey(user.email);
+
+    this.programService.shareProgram(user, userEmailKey, this.program);
+  }
+
   encodeAsFirebaseKey(string) {
     return string.replace(/\./g, '%2E')
       .replace(/\%/g, '%25')

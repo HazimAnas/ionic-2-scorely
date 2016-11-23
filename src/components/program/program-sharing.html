@@ -11,7 +11,7 @@
   	    <ion-input [(ngModel)]="email" type="email" name="email" required></ion-input>
   	  </ion-item>
      <ion-item>
-       <button ion-button block large type="submit" (click)="searchEmail(email)">Edit</button>
+       <button ion-button block large type="submit" (click)="searchEmail(email)">Search</button>
     </ion-item>
 	</ion-list>
   <ion-list *ngIf="user">
@@ -20,6 +20,10 @@
     </ion-list-header>
     <ion-item>
       {{user.name}}
+      <button ion-button outline item-right icon-left (click)="shareWithUser(user)">
+        <ion-icon name="people"></ion-icon>
+        Share
+      </button>
     </ion-item>
   </ion-list>
 </ion-content>

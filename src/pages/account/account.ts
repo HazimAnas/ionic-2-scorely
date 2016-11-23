@@ -9,12 +9,22 @@ import { App } from 'ionic-angular';
   templateUrl: 'account.html'
 })
 export class AccountPage {
+  public user: any;
+
   constructor(private navCtrl: NavController, private as: AuthService, private app : App) {
+    this.user = as.getUser();
   }
 
   logout() {
-    this.as.logout();
+    this.as.logout().then(res => {
+      if(res) {
+        this.app.getRootNav().push(LoginPage);
+      }
+      else {
+        console.log("Error loggin out.");
+      }
+    });
     //this.app.getRootNav().setRoot(LoginPage);
-    this.app.getRootNav().push(LoginPage);
+
   }
 }

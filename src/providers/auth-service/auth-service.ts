@@ -69,13 +69,17 @@ export class AuthService {
   });
   }
 
-  logout() {
-    firebase.auth().signOut().then(function() {
-      // Sign-out successful.
-      console.log("Logged out");
-    }, function(error) {
-      // An error happened.
-      console.log("Error logging out " + error);
+  logout(): Promise <any> {
+    return new Promise((resolve, reject) => {
+      firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+        console.log("Logged out");
+        resolve(true);
+      }, function(error) {
+        // An error happened.
+        console.log("Error logging out " + error);
+        reject(false);
+      });
     });
 
     /*this.user = null;
@@ -113,7 +117,12 @@ export class AuthService {
                     //this.displayAlert(success,"signInWithCredential successful")
                     this.userProfile = userData;
                     this.user = success;
-                    this.af.database.object(`/user/${this.encodeAsFirebaseKey(success.email)}/`).set({ name : success.displayName, uid : this.user.uid });
+                    this.af.database.object(`/user/${this.encodeAsFirebaseKey(success.email)}/`)
+                    .set({
+                      name : success.displayName,
+                       uid : this.user.uid,
+                       email : success.email
+                     });
                   })
                   .catch((error) => {
                     console.log("Firebase failure 1: " + error);

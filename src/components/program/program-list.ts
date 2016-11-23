@@ -15,7 +15,10 @@ import { ProgramService } from '../../providers/program-service/program-service'
 })
 export class ProgramList implements OnInit {
 
-  programs : FirebaseListObservable<Program[]>;
+  public programType: string = "my";
+  public programs : FirebaseListObservable<Program[]>;
+  public sharedPrograms : FirebaseListObservable<Program[]>;
+
   constructor(private navCtrl: NavController, public alertCtrl: AlertController, private programService: ProgramService) {
   }
 
@@ -25,7 +28,9 @@ export class ProgramList implements OnInit {
 
   getPrograms(): void {
   	this.programService.getPrograms();
+    this.programService.getSharedPrograms();
     this.programs = this.programService.programsList;
+    this.sharedPrograms = this.programService.sharedProgramsList;
   }
 
   programDetail(key, program) {
