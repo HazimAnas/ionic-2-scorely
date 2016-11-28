@@ -8,16 +8,17 @@ import {ProgramAdd} from './program-add';
 import {ProgramSharing} from './program-sharing';
 import { Program } from './program';
 import { ProgramService } from '../../providers/program-service/program-service';
+import { ObjArr } from '../../app/pipes/objArr';
 
 @Component({
   selector: 'program-list',
-  templateUrl: 'program-list.html'
+  templateUrl: 'program-list.html',
 })
 export class ProgramList implements OnInit {
 
   public programType: string = "my";
   public programs : FirebaseListObservable<Program[]>;
-  public sharedPrograms : FirebaseListObservable<Program[]>;
+  public sharedPrograms : Program[];
 
   constructor(private navCtrl: NavController, public alertCtrl: AlertController, private programService: ProgramService) {
   }
@@ -31,6 +32,7 @@ export class ProgramList implements OnInit {
     this.programService.getSharedPrograms();
     this.programs = this.programService.programsList;
     this.sharedPrograms = this.programService.sharedProgramsList;
+
   }
 
   programDetail(key, program) {

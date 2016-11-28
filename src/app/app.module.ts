@@ -24,6 +24,7 @@ import { TeamService } from '../providers/team-service/team-service';
 import { PointService } from '../providers/point-service/point-service';
 import { AuthService } from '../providers/auth-service/auth-service';
 import { AngularFireModule, AuthProviders, AuthMethods } from 'angularfire2';
+import { ObjArr } from '../app/pipes/objArr';
 
 const fbConf = {
 apiKey: "AIzaSyCgus8xLyN6gz-Nzr0y81_1XXWP02Vf_sE",
@@ -57,7 +58,8 @@ const fbAuthConf = {
     TeamDetail,
     TeamAdd,
     TeamEdit,
-    PointEdit
+    PointEdit,
+    ObjArr
   ],
   imports: [
     IonicModule.forRoot(MyApp),

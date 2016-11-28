@@ -41,10 +41,10 @@
     <ion-list-header>
       Shared Program List
     </ion-list-header>
-    <ion-item *ngFor='let program of sharedPrograms | async'>
-      <button ion-item (click)="programDetail(program.$key, program)">
-        <h2>{{program.name}}</h2>
-        <h3>{{program.description}}</h3>
+    <ion-item *ngFor='let program of sharedPrograms | ObjArr'>
+      <button ion-item (click)="programDetail(program.value.$key, program.value)">
+        <h2>{{program.value.name}}</h2>
+        <h3>{{program.value.description}}</h3>
       </button>
     </ion-item>
   </ion-list>

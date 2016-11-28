@@ -39,7 +39,7 @@ export class TeamService {
      activities.forEach(activity => {
        teamActivityList[activity.$key] = {"name" : activity.name};
      });
-    });
+   });
     JSON.stringify(teamActivityList)
 
     this.teamList.push({

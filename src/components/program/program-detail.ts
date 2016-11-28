@@ -5,13 +5,14 @@ import { Activity } from '../activity/activity';
 import { Team } from '../team/team';
 import { TeamService } from '../../providers/team-service/team-service';
 import { ActivityService } from '../../providers/activity-service/activity-service';
+import { ProgramService } from '../../providers/program-service/program-service';
 import { TeamAdd } from '../team/team-add';
 import { TeamEdit } from '../team/team-edit';
 import { TeamDetail } from '../team/team-detail';
 import { ActivityAdd } from '../activity/activity-add';
 import { ActivityEdit } from '../activity/activity-edit';
 import { ActivityDetail } from '../activity/activity-detail';
-import { AngularFire, FirebaseListObservable } from 'angularfire2';
+import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
 
 @Component({
   selector: 'program-detail',
@@ -21,14 +22,29 @@ export class ProgramDetail {
 
   public program: Program;
   public programId: string;
-  public activities: FirebaseListObservable <Activity[]>;
-  public teams: FirebaseListObservable <Team[]>;
+  public activities: FirebaseListObservable<Activity[]>;
+  public teams: FirebaseListObservable<Team[]>;
 
-  constructor(private navCtrl: NavController, private param: NavParams, public alertCtrl: AlertController, private teamService: TeamService, private activityService: ActivityService) {
-  	this.program = param.get('program');
-    this.programId = param.get('programId');
+  constructor(private navCtrl: NavController, private param: NavParams, public alertCtrl: AlertController,private programService: ProgramService, private teamService: TeamService, private activityService: ActivityService) {
+  	this.programId = param.get('programId');
+    this.program = this.param.get('program');
     this.getTeams();
     this.getActivites();
+  }
+
+  getProgram(): void {
+    var programObs: FirebaseObjectObservable<Program>;
+    if(this.param.get('program').uid) {
+      programObs = this.programService.getProgramById(this.programId,this.param.get('program').uid);
+    }
+    else {
+      programObs = this.programService.getProgramById(this.programId, null);
+    }
+    programObs.subscribe(program=> {
+      this.program.$key = program.$key;
+      this.program.name = program.name;
+      this.program.description = program.description;
+    });
   }
 
   getActivites(): void {

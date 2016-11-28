@@ -13,9 +13,10 @@ import { AuthService } from '../auth-service/auth-service';
 */
 @Injectable()
 export class ProgramService {
+  public program: FirebaseObjectObservable<Program>;
   public programs: FirebaseObjectObservable<Program[]>;
-  public programsList : FirebaseListObservable <Program[]>;
-  public sharedProgramsList: FirebaseListObservable <Program[]>;
+  public programsList : FirebaseListObservable<Program[]>;
+  public sharedProgramsList: any;
   public newProgram : Program;
   private userID;
 
@@ -24,14 +25,38 @@ export class ProgramService {
     this.userID = as.getUser().uid;
   }
 
+  getProgramById(programId, userID) {
+    if(userID){
+      return this.af.database.object(`/program/${userID}/${programId}`);
+    }
+    else {
+      return this.af.database.object(`/program/${this.userID}/${programId}`);
+    }
+  }
+
   getPrograms() {
     this.programsList = this.af.database.list(`/program/${this.userID}`);
   }
 
   getSharedPrograms() {
-    this.sharedProgramsList = this.af.database.list(`/shareList/${this.userID}`);
+    var sharedList: FirebaseListObservable <any>;
+    var programRef: FirebaseObjectObservable <Program>;
+    this.sharedProgramsList = [];
 
-    console.log(this.sharedProgramsList);
+    sharedList= this.af.database.list(`/shareList/${this.userID}`);
+
+    sharedList.subscribe(programs => {
+      this.sharedProgramsList
+      programs.forEach((program) => {
+
+        programRef = this.af.database.object(`/program/${program.uid}/${program.$key}`);
+        console.log(`shared program url /program/${program.uid}/${program.$key}`);
+        programRef.subscribe(programOb => {
+          this.sharedProgramsList[programOb.$key] = {'$key': programOb.$key, 'name': programOb.name, 'description': programOb.description, 'sharedBy': program.sharedBy, 'uid' : program.uid};
+          console.log(this.sharedProgramsList);
+        });
+      });
+    });
   }
 
   addProgram(program): boolean {
@@ -104,5 +129,21 @@ export class ProgramService {
    console.log(`shared user url /shareList/${user.uid}/${program.$key}`);
 
   }
+
+  encodeAsFirebaseKey(string) {
+    return string.replace(/\./g, '%2E')
+      .replace(/\%/g, '%25')
+      .replace(/\#/g, '%23')
+      .replace(/\$/g, '%24')
+      .replace(/\//g, '%2F')
+      .replace(/\[/g, '%5B')
+      .replace(/\]/g, '%5D');
+  }
+
+  removeDuplicates(myArr, prop) {
+    return myArr.filter((obj, pos, arr) => {
+        return arr.map(mapObj => mapObj[prop]).indexOf(obj[prop]) === pos;
+    });
+}
 
 }
