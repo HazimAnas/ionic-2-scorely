@@ -1,6 +1,6 @@
 <ion-header>
-  <ion-navbar>
-    <ion-title>Program Detail</ion-title>
+  <ion-navbar favorite>
+    <ion-title primary>Program Detail</ion-title>
   </ion-navbar>
 </ion-header>
 
@@ -15,50 +15,76 @@
 	  </ion-item>
 
 	</ion-list>
-  <ion-list>
-    <ion-list-header>
-      <button item-right clear light (click)="teamAdd()">
-        <ion-icon name="add"></ion-icon>
-      </button>
-      Team List
-    </ion-list-header>
-    <ion-item-sliding *ngFor='let team of teams | async'>
-      <button ion-item (click)="teamDetail(team.$key)">
-        <h2>{{team.name}}</h2>
-      </button>
-      <ion-item-options side="right">
-        <button ion-button icon-left color="secondary" (click)="teamEdit(team)">
-          <ion-icon name="create"></ion-icon>
-          Edit
+  <div padding>
+    <ion-segment [(ngModel)]="programDetail">
+      <ion-segment-button value="activity">
+        Activity List
+      </ion-segment-button>
+      <ion-segment-button value="team">
+        Team List
+      </ion-segment-button>
+      <ion-segment-button value="rank">
+        Ranking
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+  <div [ngSwitch]="programDetail">
+    <ion-list *ngSwitchCase="'team'">
+      <ion-list-header>
+        <button item-right clear light (click)="teamAdd()">
+          <ion-icon name="add"></ion-icon>
         </button>
-        <button ion-button icon-left color="danger" (click)="teamDelete(team.$key)">
-          <ion-icon name="close"></ion-icon>
-          Delete
+        Team List
+      </ion-list-header>
+      <ion-item-sliding *ngFor='let team of teams | async'>
+        <button ion-item (click)="teamDetail(team.$key)">
+          <h2>{{team.name}}</h2>
         </button>
-      </ion-item-options>
-    </ion-item-sliding>
-  </ion-list>
-  <ion-list>
-    <ion-list-header>
-      <button item-right clear light (click)="activityAdd()">
-        <ion-icon name="add"></ion-icon>
-      </button>
-      Activity List
-    </ion-list-header>
-    <ion-item-sliding *ngFor='let activity of activities| async'>
-      <button ion-item (click)="activityDetail(activity.$key)">
-        <h2>{{activity.name}}</h2>
-      </button>
-      <ion-item-options side="right">
-        <button ion-button icon-left color="secondary" (click)="activityEdit(activity)">
-          <ion-icon name="create"></ion-icon>
-          Edit
+        <ion-item-options side="right">
+          <button ion-button icon-left color="secondary" (click)="teamEdit(team)">
+            <ion-icon name="create"></ion-icon>
+            Edit
+          </button>
+          <button ion-button icon-left color="danger" (click)="teamDelete(team.$key)">
+            <ion-icon name="close"></ion-icon>
+            Delete
+          </button>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+    <ion-list *ngSwitchCase="'activity'">
+      <ion-list-header>
+        <button item-right clear light (click)="activityAdd()">
+          <ion-icon name="add"></ion-icon>
         </button>
-        <button ion-button icon-left color="danger" (click)="activityDelete(activity.$key)">
-          <ion-icon name="close"></ion-icon>
-          Delete
+        Activity List
+      </ion-list-header>
+      <ion-item-sliding *ngFor='let activity of activities| async'>
+        <button ion-item (click)="activityDetail(activity.$key)">
+          <h2>{{activity.name}}</h2>
         </button>
-      </ion-item-options>
-    </ion-item-sliding>
-  </ion-list>
+        <ion-item-options side="right">
+          <button ion-button icon-left color="secondary" (click)="activityEdit(activity)">
+            <ion-icon name="create"></ion-icon>
+            Edit
+          </button>
+          <button ion-button icon-left color="danger" (click)="activityDelete(activity.$key)">
+            <ion-icon name="close"></ion-icon>
+            Delete
+          </button>
+        </ion-item-options>
+      </ion-item-sliding>
+    </ion-list>
+    <ion-list *ngSwitchCase="'rank'">
+      <ion-list-header>
+        Ranking
+      </ion-list-header>
+      <ion-item *ngFor='let rank of ranking | async '>
+        <button ion-item (click)="teamDetail(rank.$key)">
+          <h2>{{rank.name}}</h2>
+          {{rank.amount || "0"}} Points
+        </button>
+      </ion-item>
+    </ion-list>
+  </div>
 </ion-content>

@@ -23,7 +23,7 @@
       <ion-item>
         <h2>{{team.name}}</h2>
         {{team.amount || "0"}} Points
-        <button ion-button item-right icon-left color="primary" (click)='editPoint(activity.name, activity.key, team.$key)'>
+        <button ion-button item-right icon-left color="primary" (click)='editPoint(activity.name, activity.$key, team.key)'>
           <ion-icon name="add"></ion-icon>
           Edit Point
         </button>

@@ -76,7 +76,7 @@ export class ActivityService {
         teams.forEach( team => {
           console.log('activity object url :' +`/team/${this.activeProgram}/${team.$key}/activity/${key}`);
           this.af.database.object(`/team/${this.activeProgram}/${team.$key}/activity/${key}`)
-          .update({ name : activity.name});
+          .update({ name : activity.name, amount : 0});
         });
       }).unsubscribe();
     }

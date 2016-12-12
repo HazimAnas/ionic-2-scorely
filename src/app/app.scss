@@ -16,8 +16,16 @@
 // automatically applied to the <body> element in the app.
 
 
-program-detail {
-  ion-item-sliding {
-    border-bottom: 2px solid #387ef5;
+ion-item-sliding {
+    border-bottom: 2px solid #514CA9;
   }
+
+
+.tabs-md .tabbar {
+  background: none;
+}
+
+.scroll-bg{
+  background: url("../assets/img/Laptop-coffe.jpg") no-repeat center center fixed;
+  background-size: cover;
 }

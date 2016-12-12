@@ -46,7 +46,7 @@ export class ProgramService {
     sharedList= this.af.database.list(`/shareList/${this.userID}`);
 
     sharedList.subscribe(programs => {
-      this.sharedProgramsList
+
       programs.forEach((program) => {
 
         programRef = this.af.database.object(`/program/${program.uid}/${program.$key}`);

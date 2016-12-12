@@ -3,6 +3,7 @@ import {NavController, NavParams} from 'ionic-angular';
 import {Activity} from './activity';
 import {FirebaseObjectObservable} from 'angularfire2';
 import { ActivityService } from '../../providers/activity-service/activity-service';
+import { PointEdit } from '../point/point-edit';
 
 @Component({
   selector: 'activity-detail',
@@ -20,7 +21,7 @@ export class ActivityDetail {
   getActivity() {
     this.activityObs = this.activityService.getActivitiesById(this.param.get('activityId'));
     this.activityObs.subscribe(activity=>{
-         this.activity.$key = activity.key;
+         this.activity.$key = activity.$key;
          this.activity.name = activity.name;
          this.activity.description = activity.description;
          if(activity.team) {
@@ -34,5 +35,14 @@ export class ActivityDetail {
     //this.activity.team = Object.keys(this.activity.team).map((key)=>{ return this.activity.team[key]});
 
     console.log(this.activity);
+  }
+
+  editPoint(name, activityId, teamId) {
+    this.navCtrl.push(PointEdit, {
+      name : name,
+      programId : this.activityService.activeProgram,
+      activityId : activityId,
+      teamId : teamId,
+    })
   }
 }

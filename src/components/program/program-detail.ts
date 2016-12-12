@@ -6,6 +6,7 @@ import { Team } from '../team/team';
 import { TeamService } from '../../providers/team-service/team-service';
 import { ActivityService } from '../../providers/activity-service/activity-service';
 import { ProgramService } from '../../providers/program-service/program-service';
+import { PointService } from '../../providers/point-service/point-service';
 import { TeamAdd } from '../team/team-add';
 import { TeamEdit } from '../team/team-edit';
 import { TeamDetail } from '../team/team-detail';
@@ -13,6 +14,8 @@ import { ActivityAdd } from '../activity/activity-add';
 import { ActivityEdit } from '../activity/activity-edit';
 import { ActivityDetail } from '../activity/activity-detail';
 import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'angularfire2';
+import {Observable} from 'rxjs/Observable';
+import { ObjArr } from '../../app/pipes/objArr';
 
 @Component({
   selector: 'program-detail',
@@ -20,16 +23,20 @@ import { AngularFire, FirebaseListObservable, FirebaseObjectObservable } from 'a
 })
 export class ProgramDetail {
 
+  public programDetail: string = "activity";
   public program: Program;
   public programId: string;
   public activities: FirebaseListObservable<Activity[]>;
   public teams: FirebaseListObservable<Team[]>;
+  public ranking: Observable<any>;
 
-  constructor(private navCtrl: NavController, private param: NavParams, public alertCtrl: AlertController,private programService: ProgramService, private teamService: TeamService, private activityService: ActivityService) {
+  constructor(private navCtrl: NavController, private param: NavParams, public alertCtrl: AlertController,private programService: ProgramService, private teamService: TeamService, private activityService: ActivityService, private pointService: PointService) {
   	this.programId = param.get('programId');
     this.program = this.param.get('program');
     this.getTeams();
     this.getActivites();
+    this.ranking = pointService.getRanking(this.programId).map( (arr) => { return arr.reverse(); });
+    console.log(this.ranking);
   }
 
   getProgram(): void {

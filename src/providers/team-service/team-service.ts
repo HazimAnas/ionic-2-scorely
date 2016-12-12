@@ -37,7 +37,7 @@ export class TeamService {
 
     this.activityList.subscribe(activities=>{
      activities.forEach(activity => {
-       teamActivityList[activity.$key] = {"name" : activity.name};
+       teamActivityList[activity.$key] = {"name" : activity.name, "amount" : 0};
      });
    });
     JSON.stringify(teamActivityList)
@@ -47,12 +47,17 @@ export class TeamService {
       description: team.description,
       activity: teamActivityList
     }).then( newTeam => {
+
       this.newTeam = newTeam;
+
+      this.af.database.object(`/ranking/${this.activeProgram}/${newTeam.getKey()}`)
+      .set({ name : team.name, amount : 0});
+
       this.activityList.subscribe(activities => {
         activities.forEach( activity => {
           console.log('team object url :' +`/activity/${this.activeProgram}/${activity.$key}/team/${newTeam.getKey()}`);
           this.af.database.object(`/activity/${this.activeProgram}/${activity.$key}/team/${newTeam.getKey()}`)
-          .set({ name : team.name});
+          .set({ name : team.name, amount : 0});
         });
       }).unsubscribe();
       return true;
@@ -88,7 +93,7 @@ export class TeamService {
 
   deleteTeam(key) {
     this.teamList.remove(key);
-
+    this.af.database.list(`/ranking/${this.activeProgram}/`).remove(key);
     this.activityList.subscribe(activities => {
       activities.forEach( activity => {
         this.af.database.list(`/activity/${this.activeProgram}/${activity.$key}/team/`)

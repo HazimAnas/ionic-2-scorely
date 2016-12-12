@@ -23,7 +23,7 @@ $background-color:  #fff;
 // The "primary" color is the only required color in the map.
 
 $colors: (
-  primary:    #387ef5,
+  primary:    #514CA9,
   secondary:  #32db64,
   danger:     #f53d3d,
   light:      #f4f4f4,
@@ -31,7 +31,13 @@ $colors: (
   favorite:   #69BB7B
 );
 
+$toolbar-background:   #514CA9;
+$toolbar-border-color:   #514CA9;
+$toolbar-text-color:   #f4f4f4;
+//$toolbar-active-color:   #514CA9;
+//$toolbar-inactive-color:   #f4f4f4;
 
+//#387ef5
 // App Theme
 // --------------------------------------------------
 // Ionic apps can have different themes applied, which can
